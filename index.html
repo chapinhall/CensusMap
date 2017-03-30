@@ -1,0 +1,51 @@
+<html lang = "en">
+<head>
+  <title>Census</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.3/leaflet.draw.css"/>
+  <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet-src.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.3/leaflet.draw.js"></script>
+  <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <style>
+    #map{ height: 100% }
+  </style>
+</head>
+<body>
+  <div class = "container-fluid">
+    <div class = "row">
+      <div class = "col-sm-1">
+        <input id = "calculate" class = "btn btn-success" type = "submit" value = "Calculate" disabled="disabled"/>
+      <br/>
+      <br/>
+      <input id = "delete" class = "btn btn-danger" type = "submit" value = "Delete" disabled = "disabled"/>
+      </div>
+      <div class = "col-sm-9">
+        <div id="map"></div>
+      </div>
+      <div class = "col-sm-2">
+        <table class = "table table-hover">
+          <thead>
+            <tr>
+              <th> Measurement </th>
+              <th> Value </th>
+            </tr>
+          </thead>
+          <tbody id = "results">
+          </tbody>
+        </table>
+      </div>
+      </div>
+  <script src="index.js">
+  </script>
+
+</body>
+</html>
