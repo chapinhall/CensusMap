@@ -24,8 +24,6 @@ function style(feature) {
 // Color Census Tracts
 geojson = L.geoJson(tracts, {style: style}).addTo(map);
 
-
-
 // add draw interface for userArea
 var drawnItems = new L.LayerGroup();
 L.drawLocal.draw.toolbar.buttons.polygon = 'Draw the area you want examine';
@@ -69,10 +67,6 @@ document.getElementById("delete").onclick = function () {
  };
  map.removeLayer(geojson);
  geojson = L.geoJson(tracts, {style: style}).addTo(map);
-
-
-
-
  };
 
  document.getElementById("calculate").onclick = function () {
@@ -81,10 +75,6 @@ document.getElementById("delete").onclick = function () {
   geojson = L.geoJson(tracts, {style: style}).addTo(map);
   calculations.population = calcPopulation(tracts);
   addToTable(calculations);
-
-
-
-
 
  };
 
@@ -98,6 +88,11 @@ document.getElementById("delete").onclick = function () {
       if (intersection != null){
         tract.properties.intersection = true;
         tract.properties.color = "#2ca25f"
+        var tractArea = turf.area(tract);
+        var intersectionArea = turf.area(intersection);
+        tract.properties.overlap = intersectionArea / tractArea;
+        console.log(tract.properties.overlap);
+
       }
     }
   }
@@ -109,15 +104,13 @@ document.getElementById("delete").onclick = function () {
   for (var i = 0; i < tracts.features.length; i++){
       var tract = tracts.features[i];
     if (tract.properties.intersection){
-        pop = tract.properties.population + pop;
+        pop = (tract.properties.population * tract.properties.overlap) + pop;
       }
  };
  console.log(pop);
- return pop;
+ return Math.round(pop);
 
 };
-
-
 
 function addToTable(calculations)
 {
@@ -135,6 +128,3 @@ function addToTable(calculations)
   NewCol1.appendChild(Text1);
   NewCol2.appendChild(Text2);
 };
-
-
-
