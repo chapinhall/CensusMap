@@ -1,0 +1,87 @@
+/* custom styles */
+
+body {
+  font-size: 16px;
+  background-color: #242426;
+  position: relative;
+  font-weight: 300;
+  color: #ddd;
+}
+
+a {
+  color: #cc3333;
+}
+
+a:active, a:hover, a:focus {
+  color: #cc3333;
+}
+
+h1, h2{
+  font-family: 'Alegreya', serif;
+  color: #e77960;
+}
+
+h3, h4, h5, .h3, .h4, .h5 {
+  font-family: 'Alegreya', serif;
+  font-style: italic;
+  color: #e8b19c;
+}
+
+.intro-blurb {
+  font-family: 'Alegreya', serif;
+  color: #e8b19c;
+}
+
+.info.leaflet-control {
+    background-color: RGBA(255, 255, 255, .7);
+    color: #333;
+    padding: 0 10px;
+    min-width: 250px;
+    min-height: 42px;
+}
+
+.info.leaflet-control > h4, .info.leaflet-control > h5 {
+  font-style: normal;
+  color: #333;
+}
+
+#menu { position: absolute; top: 5px; right: 10px; width: 275px; height:60px; background: transparent; z-index:500;}
+#menu a { 
+  margin: 15px 10px 0 0;
+  float: right;
+  vertical-align: baseline;
+  padding: 4px;
+  text-align: center;
+  line-height: normal;
+}
+
+.btn-success{
+  width:30%;
+}
+
+.btn-danger{
+  width:30%;
+}
+
+#results th, td {
+  width:40%;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: #eab19c;
+  border: 3px solid black;
+  background-color: #a50f15;
+  text-align:center;
+  }
+#sections {
+  display: inline-block;
+}
+
+#map-nav {
+    display: inline-block;
+    margin-left: 15px;
+  }
+
+
+
+

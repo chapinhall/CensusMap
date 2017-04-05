@@ -1,6 +1,6 @@
 
 var mapboxAccessToken = 'pk.eyJ1IjoicG1hY2siLCJhIjoiY2l0cTJkN3N3MDA4ZTJvbnhoeG12MDM5ZyJ9.ISJHx3VHMvhQade2UQAIZg';
-var map = L.map('map').setView([41.8781, -87.6298], 12);
+var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
 var calculations = {};
 

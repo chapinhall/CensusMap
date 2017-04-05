@@ -1,52 +1,160 @@
-<html lang = "en">
-<head>
-  <title>Census Tract Map</title>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-  <link rel="stylesheet" href="  https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw-src.css"/>
-  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw-src.js"></script>
-  <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
-  <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <html lang = "en">
+    <head>
+      <title>Census Tract Map</title>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+      <link rel="stylesheet" href="  https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw-src.css"/>
+      <link rel="stylesheet" href="index.css" />
+      <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.9/leaflet.draw-src.js"></script>
+      <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
+      <script src="https://npmcdn.com/@turf/turf@3.5.1/turf.min.js"></script>
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-  <style>
-    #map{ height: 100% }
-  </style>
-</head>
-<body>
-  <div class = "container-fluid">
-    <div class = "row">
-      <div class = "col-sm-1">
-        <input id = "calculate" class = "btn btn-success" type = "submit" value = "Calculate" disabled="disabled"/>
-      <br/>
-      <br/>
-      <input id = "delete" class = "btn btn-danger" type = "submit" value = "Delete" disabled = "disabled"/>
-      </div>
-      <div class = "col-sm-9">
-        <div id="map"></div>
-      </div>
-      <div class = "col-sm-2">
-        <table class = "table table-hover">
-          <thead>
-            <tr>
-              <th> Measurement </th>
-              <th> Value </th>
-            </tr>
-          </thead>
-          <tbody id = "results">
-          </tbody>
-        </table>
-      </div>
-      </div>
-  <script type="text/javascript" src="tracts.js"></script>
-  <script type="text/javascript" src="index.js">
-  </script>
+      <style>
+      #map{ height: 100% }
+      </style>
+    </head>
+    <body>
 
-</body>
-</html>
+      <nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+
+            <a class="navbar-brand" href="/">Chicago Census Mapper</a>
+
+          </div>
+          <div id="navbar">
+            <ul id="sections" class="nav navbar-nav">
+              <li><a href="#section-1">Intro</a></li>
+              <li><a href="#section-2">About</a></li>
+              <li><a href="#section-3">Results</a></li>
+            </ul>
+
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+
+
+      <div class = "container-fluid">
+        <div class="row">
+          <div class="col-sm-5 no-padding">
+            <div id="map" class="desktop-only"></div>
+            <div id='menu' class="desktop-only">
+              <input id = "calculate" class = "btn btn-success" type = "submit" value = "Run" disabled = "disabled"/>
+              <input id = "delete" class = "btn btn-danger" "type" = "submit" value = "Remove" disabled = "disabled"/>
+            </div>
+          </div>
+
+          <div id="scroll-arrow" class="desktop-only">
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+          </div>
+          <div id="content" class="col-sm-7 scroll" data-spy="scroll" data-target="#navbar">
+            <div id="section-1">
+              <h1>Introduction</h1>
+              <p class="intro-blurb">
+                Welcome to the Census Mapping Tool.
+              </p>
+              <hr>
+
+              <p>
+                This tool allows you to select your own geography.
+              </p>
+
+              <p>
+                Estimated statistics are computed from the Census Bureau 
+                based on your selected geography.
+              </p>
+
+              <p class="h3">
+                Directions
+              </p>
+
+              <p>
+                First draw your geography using the icon on the top right corner of the map.
+              </p>
+               <p>
+                If your geography is discontinuous, you may draw multiple shapes.
+              </p>
+              <p>
+                Once you have created your geography of interest, click the "Run" button to compute 
+                your aggregated estimates.
+              </p>
+
+              <p> 
+                To start over, either click the "Delete" button to clear your selected geographies 
+                or refresh the page.
+
+
+            </div>
+            <br>
+            <div id="section-2">
+              <h2>About</h2>
+              <p class="h3">
+                Methodology
+              </p>
+              <p>
+                Data is drawn from the 2010 Census
+              </p>
+              <p>
+                Your selected geography is matched to corresponding Census Tracts
+              </p>
+              <p>
+                An estimate is computed for your geography using the corresponding Census Tracts
+              </p>
+              <p>
+                For example, if your geography contains 10 Census Tracts,
+                these tracts would be summed together to get the corresponding estimated statistic
+              </p>
+              <p>
+                If your geography is only a partial match to a Census Tract, the percent overlap
+                of the two geographies will be used as the percent to add to the estimate statistic
+              </p>
+              <p>
+                For example, a census tract that 10% within the selected geography will contribute 10% of 
+                its value to the overall estimated statistic
+              </p>
+              <p>
+                Results are displayed in the Results Section
+              </p>
+
+            </div>
+            <div id="section-3">
+              <h2>Results</h2>
+              <table id = "results">
+              <thead>
+                <tr>
+                  <th> Measurement </th>
+                  <th> Value </th>
+                </tr>
+              </thead>
+              <tbody id = "results">
+              </tbody>
+            </table>
+              
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+        <script type="text/javascript" src="tracts.js"></script>
+        <script type="text/javascript" src="index.js">
+        </script>
+
+      </body>
+      </html>
