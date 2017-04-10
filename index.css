@@ -79,3 +79,38 @@ h3, h4, h5, .h3, .h4, .h5 {
 
 
 
+
+.navbar-default {
+  background-color: #0D0D0D;
+  margin-bottom: 0px;
+}
+
+.navbar-default .navbar-nav > .active > a {
+  background-color: #a50f15;
+  color: #ddd;
+}
+.navbar-default .navbar-nav > .active > a:hover {
+  background-color: #a50f15;
+  color: #ddd;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #ddd;
+}
+.navbar-default .navbar-nav > li > a:hover {
+  color: #e77960;
+}
+.navbar-header > a.navbar-brand:hover{
+  color: #e77960;
+}
+.navbar-header > .navbar-brand{
+  font-family: 'Alegreya', serif;
+  color: #ddd;
+  padding-top: 20.5px;
+}
+
+.no-padding{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+
