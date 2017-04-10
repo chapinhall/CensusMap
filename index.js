@@ -68,6 +68,12 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.intersection = false;
     tracts.features[i].properties.color = "#2c7fb8"
  };
+  // var table = document.getElementById("results")
+  var results = document.getElementById("results");
+  while (results.firstChild){
+    results.removeChild(results.firstChild);
+  }
+
  };
 
  document.getElementById("calculate").onclick = function () {
