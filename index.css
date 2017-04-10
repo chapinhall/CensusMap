@@ -32,18 +32,12 @@ h3, h4, h5, .h3, .h4, .h5 {
   color: #e8b19c;
 }
 
-.info.leaflet-control {
-    background-color: RGBA(255, 255, 255, .7);
-    color: #333;
-    padding: 0 10px;
-    min-width: 250px;
-    min-height: 42px;
+#content ul > li {
+  list-style-type: square;
+  margin-bottom: 8px;
 }
 
-.info.leaflet-control > h4, .info.leaflet-control > h5 {
-  font-style: normal;
-  color: #333;
-}
+
 
 #menu { position: absolute; top: 5px; right: 10px; width: 275px; height:60px; background: transparent; z-index:500;}
 #menu a { 

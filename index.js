@@ -14,15 +14,18 @@ function style(feature) {
     return {
       weight: 2,
       opacity: 1,
-      color: 'white',
+      color: '#e8b19c',
       dashArray: '3',
-      fillOpacity: 0.7,
-      fillColor: (feature.properties.color)
+      fillOpacity: 0.3,
+      fillColor: ('#e8b19c')
     };
   }
 
 // Color Census Tracts
-geojson = L.geoJson(tracts, {style: style}).addTo(map);
+// geojson = L.geoJson(tracts, {style: style}).addTo(map);
+
+//Color Neighborhoods 
+geojson = L.geoJson(neighborhoods, {style: style}).addTo(map);
 
 // add draw interface for userArea
 var drawnItems = new L.LayerGroup();
@@ -37,7 +40,7 @@ L.drawLocal.draw.toolbar.buttons.polygon = 'Draw the area you want examine';
           marker: false,
           polygon: {
             shapeOptions:{
-              color: 'red'
+              color: 'green'
             }
           },
 
@@ -65,14 +68,10 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.intersection = false;
     tracts.features[i].properties.color = "#2c7fb8"
  };
- map.removeLayer(geojson);
- geojson = L.geoJson(tracts, {style: style}).addTo(map);
  };
 
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
-  map.removeLayer(geojson);
-  geojson = L.geoJson(tracts, {style: style}).addTo(map);
   calculations.population = calcPopulation(tracts);
   addToTable(calculations);
 
@@ -128,3 +127,10 @@ function addToTable(calculations)
   NewCol1.appendChild(Text1);
   NewCol2.appendChild(Text2);
 };
+
+$(window).resize(function () {
+  var h = $(window).height(),
+  offsetTop = 60; // Calculate the top offset
+  $('#map').css('height', (h - offsetTop));
+  $('#content').css('height', (h - offsetTop));
+}).resize();
