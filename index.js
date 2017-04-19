@@ -69,7 +69,7 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.color = "#2c7fb8"
  };
   // var table = document.getElementById("results")
-  var results = document.getElementById("results");
+  var results = document.getElementById("displayTable");
   while (results.firstChild){
     results.removeChild(results.firstChild);
   }
@@ -120,7 +120,7 @@ document.getElementById("delete").onclick = function () {
 function addToTable(calculations)
 {
 
-  var table = document.getElementById("results")
+  var table = document.getElementById("displayTable")
   var NewRow = document.createElement("tr")
   var NewCol1 = document.createElement("td")
   var NewCol2 = document.createElement("td")
