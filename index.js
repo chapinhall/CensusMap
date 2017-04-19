@@ -24,7 +24,7 @@ function style(feature) {
 // Color Census Tracts
 // geojson = L.geoJson(tracts, {style: style}).addTo(map);
 
-//Color Neighborhoods 
+//Color Neighborhoods
 geojson = L.geoJson(neighborhoods, {style: style}).addTo(map);
 
 // add draw interface for userArea
@@ -119,7 +119,7 @@ document.getElementById("delete").onclick = function () {
 
 function addToTable(calculations)
 {
-  
+
   var table = document.getElementById("results")
   var NewRow = document.createElement("tr")
   var NewCol1 = document.createElement("td")

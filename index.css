@@ -1,6 +1,7 @@
 /* custom styles */
 
 body {
+  padding-top: 50px;
   font-size: 16px;
   background-color: #242426;
   position: relative;
@@ -40,7 +41,7 @@ h3, h4, h5, .h3, .h4, .h5 {
 
 
 #menu { position: absolute; top: 5px; right: 10px; width: 275px; height:60px; background: transparent; z-index:500;}
-#menu a { 
+#menu a {
   margin: 15px 10px 0 0;
   float: right;
   vertical-align: baseline;
@@ -79,7 +80,6 @@ h3, h4, h5, .h3, .h4, .h5 {
 
 
 
-
 .navbar-default {
   background-color: #0D0D0D;
   margin-bottom: 0px;
@@ -112,5 +112,3 @@ h3, h4, h5, .h3, .h4, .h5 {
   padding-left: 0px;
   padding-right: 0px;
 }
-
-
