@@ -5,10 +5,23 @@ var userShapes = new Array();
 var calculations = {};
 
 
+// <div id='map' style='width: 400px; height: 300px;'></div>
+// <script>
+// mapboxgl.accessToken = 'pk.eyJ1IjoicG1hY2siLCJhIjoiY2l0cTJkN3N3MDA4ZTJvbnhoeG12MDM5ZyJ9.ISJHx3VHMvhQade2UQAIZg';
+// var map = new mapboxgl.Map({
+//     container: 'map',
+//     style: 'mapbox://styles/mapbox/streets-v9'
+// });
+// </script>
 
-L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
-    id: 'mapbox.light',
-}).addTo(map);
+
+// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
+//     id: 'mapbox.light',
+// }).addTo(map);
+// L.mapbox.map('map-two', 'mapbox.streets').setView([40.783, -73.966], 13);
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+        maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+      }).addTo(map);
 
 function style(feature) {
     return {
