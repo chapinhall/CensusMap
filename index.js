@@ -75,10 +75,23 @@ document.getElementById("delete").onclick = function () {
 
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
-  var numResult = numCalculations(tracts);
-  for (calc in numResult){
-    addToTable(calc, numResult[calc])
+  var calcs = new Array();
+
+  var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
+  for (var i = 0; i < numVars.length; i++){
+    var row = numCalculations(numVars[i],tracts);
+    console.log(row);
+
   }
+  // var numResult = numCalculations(stat,tracts);
+
+
+
+
+  //
+  // for (calc in numResult){
+  //   addToTable(calc, numResult[calc])
+  // }
 
  };
 
@@ -100,54 +113,22 @@ document.getElementById("delete").onclick = function () {
   }
 };
 
- function numCalculations(tracts)
+ function numCalculations(stat, tracts)
 {
-  var Num_Kids_A0to2 = 0;
-  var Num_Kids_A3to4 = 0;
-  var Num_NoCars = 0;
-  var Num_Kids_AllParentsWorking = 0;
-  var Num_SinglePar_OwnKidLt6 = 0;
-  var Num_LtHsEd = 0;
-  var Num_BelowProf_3rd = 0;
-  var Num_FamIncRat_Lt50 = 0;
-  var Num_FamIncRat_Lt100 = 0;
-  var Num_FamIncRat_Lt185 = 0;
+  var row = {stat};
+  row[stat] = 0;
 
   for (var i = 0; i < tracts.features.length; i++){
       var tract = tracts.features[i];
-    if (tract.properties.intersection && tract.properties.Num_Kids_A3to4 !== undefined && tract.properties.Num_Kids_A0to2 !== undefined
-    && tract.properties.Num_NoCars !== undefined && tract.properties.Num_Kids_AllParentsWorking !== undefined
-  && tract.properties.Num_SinglePar_OwnKidLt6 !== undefined && tract.properties.Num_LtHsEd !== undefined &&
-  tract.properties.Num_BelowProf_3rd !== undefined && tract.properties.Num_FamIncRat_Lt50 !== undefined &&
-  tract.properties.Num_FamIncRat_Lt100 !== undefined && tract.properties.Num_FamIncRat_Lt185 !== undefined ){
-        Num_Kids_A0to2 = (Number(tract.properties.Num_Kids_A0to2) * tract.properties.overlap) + Num_Kids_A0to2;
-        Num_Kids_A3to4 = (Number(tract.properties.Num_Kids_A3to4) * tract.properties.overlap) + Num_Kids_A3to4;
-        Num_NoCars = (Number(tract.properties.Num_NoCars) * tract.properties.overlap) + Num_NoCars;
-        Num_Kids_AllParentsWorking = (Number(tract.properties.Num_Kids_AllParentsWorking) * tract.properties.overlap) + Num_Kids_AllParentsWorking;
-        Num_SinglePar_OwnKidLt6 = (Number(tract.properties.Num_SinglePar_OwnKidLt6) * tract.properties.overlap) + Num_SinglePar_OwnKidLt6;
-        Num_LtHsEd = (Number(tract.properties.Num_LtHsEd) * tract.properties.overlap) + Num_LtHsEd;
-        Num_BelowProf_3rd = (Number(tract.properties.Num_BelowProf_3rd) * tract.properties.overlap) + Num_BelowProf_3rd;
-        Num_FamIncRat_Lt50 = (Number(tract.properties.Num_FamIncRat_Lt50) * tract.properties.overlap) + Num_FamIncRat_Lt50;
-        Num_FamIncRat_Lt100 = (Number(tract.properties.Num_FamIncRat_Lt100) * tract.properties.overlap) + Num_FamIncRat_Lt100;
-        Num_FamIncRat_Lt185 = (Number(tract.properties.Num_FamIncRat_Lt185) * tract.properties.overlap) + Num_FamIncRat_Lt185;
+    if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
+        row[stat] = (Number(tract.properties[stat]) * tract.properties.overlap) + row[stat];
 
       }
  };
- var numResult = {"Number of Children Age 0 to 2": Math.round(Num_Kids_A0to2),
- "Number of Children Age 3 to 4": Math.round(Num_Kids_A3to4),
- "Number of Household Without Cars": Math.round(Num_NoCars),
- "Number of Children With All Parents Working": Math.round(Num_Kids_AllParentsWorking),
- "Number of Single Parents with Kids Less Than 6": Math.round(Num_SinglePar_OwnKidLt6),
- "Number of Adults Less Than High School Education": Math.round(Num_LtHsEd),
- "Number Below Proficiency 3rd Grade": Math.round(Num_BelowProf_3rd),
- "Number of Families with Income Less Than 50% of the Poverty Level": Math.round(Num_FamIncRat_Lt50),
- "Number of Families with Income Less Than 100% of the Poverty Level": Math.round(Num_FamIncRat_Lt100),
- "Number of Families with Income Less Than 185% of the Poverty Level": Math.round(Num_FamIncRat_Lt185),
- "Number of Families with Income Less Than 185% of the Poverty Level": Math.round(Num_FamIncRat_Lt185)
-}
- return numResult;
+ return row;
 
 };
+
 
 function percCalculations(tracts)
 {
