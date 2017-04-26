@@ -75,24 +75,13 @@ document.getElementById("delete").onclick = function () {
 
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
-  var calcs = new Array();
 
   var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
+  var labels = ["Number of Kids Age 0 to 2", "Number of Kids Age 3 to 4"]
   for (var i = 0; i < numVars.length; i++){
     var row = numCalculations(numVars[i],tracts);
-    console.log(row);
-
+    addToTable(row, numVars[i],labels[i]);
   }
-  // var numResult = numCalculations(stat,tracts);
-
-
-
-
-  //
-  // for (calc in numResult){
-  //   addToTable(calc, numResult[calc])
-  // }
-
  };
 
  function determineIntersect(userShapes)
@@ -139,7 +128,7 @@ return percResult;
 
 
 
-function addToTable(label, value)
+function addToTable(row, stat, label)
 {
 
   var table = document.getElementById("displayTable")
@@ -147,7 +136,7 @@ function addToTable(label, value)
   var NewCol1 = document.createElement("td")
   var NewCol2 = document.createElement("td")
   var Text1 = document.createTextNode(label)
-  var Text2 = document.createTextNode(value.toString())
+  var Text2 = document.createTextNode(row[stat].toString())
 
   table.appendChild(NewRow);
   NewRow.appendChild(NewCol1);
