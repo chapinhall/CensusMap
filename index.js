@@ -75,6 +75,10 @@ document.getElementById("delete").onclick = function () {
 
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
+  var results = document.getElementById("displayTable");
+  while (results.firstChild){
+    results.removeChild(results.firstChild);
+  }
 
   var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4", "Num_LtHsEd"]
   var labels = ["Kids Age 0 to 2", "Kids Age 3 to 4", "Less than High School Education"]
@@ -114,25 +118,13 @@ document.getElementById("delete").onclick = function () {
     if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
         row[stat] = (Number(tract.properties[stat]) * tract.properties.overlap) + row[stat];
         row[wgt] = (Number(tract.properties[wgt]) * tract.properties.overlap) + row[wgt];
-
-
       }
  };
  row[stat] = Math.round(row[stat]);
- row['perc'] = (row[stat] / row[wgt]);
+ row['perc'] = (Math.floor((row[stat] / row[wgt]) * 100)).toString().concat("%");
  return row;
 
 };
-
-
-function percCalculations(tracts)
-{
-
-return percResult;
-
-};
-
-
 
 function addToTable(row, stat, label)
 {
