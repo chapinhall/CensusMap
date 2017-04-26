@@ -76,8 +76,8 @@ document.getElementById("delete").onclick = function () {
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
 
-  var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
-  var labels = ["Number of Kids Age 0 to 2", "Number of Kids Age 3 to 4"]
+  var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4", "Num_LtHsEd"]
+  var labels = ["Kids Age 0 to 2", "Kids Age 3 to 4", "Less than High School Education"]
   for (var i = 0; i < numVars.length; i++){
     var row = numCalculations(numVars[i],tracts);
     addToTable(row, numVars[i],labels[i]);
@@ -105,15 +105,21 @@ document.getElementById("delete").onclick = function () {
  function numCalculations(stat, tracts)
 {
   var row = {stat};
+  var wgt = stat.replace("Num", "Wgt");
   row[stat] = 0;
+  row[wgt] = 0;
 
   for (var i = 0; i < tracts.features.length; i++){
       var tract = tracts.features[i];
     if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
         row[stat] = (Number(tract.properties[stat]) * tract.properties.overlap) + row[stat];
+        row[wgt] = (Number(tract.properties[wgt]) * tract.properties.overlap) + row[wgt];
+
 
       }
  };
+ row[stat] = Math.round(row[stat]);
+ row['perc'] = (row[stat] / row[wgt]);
  return row;
 
 };
@@ -130,19 +136,25 @@ return percResult;
 
 function addToTable(row, stat, label)
 {
+  console.log(row['perc'])
 
   var table = document.getElementById("displayTable")
   var NewRow = document.createElement("tr")
   var NewCol1 = document.createElement("td")
   var NewCol2 = document.createElement("td")
+  var NewCol3 = document.createElement("td")
   var Text1 = document.createTextNode(label)
   var Text2 = document.createTextNode(row[stat].toString())
+  var Text3 = document.createTextNode(row['perc'].toString())
 
   table.appendChild(NewRow);
   NewRow.appendChild(NewCol1);
   NewRow.appendChild(NewCol2);
+  NewRow.appendChild(NewCol3);
   NewCol1.appendChild(Text1);
   NewCol2.appendChild(Text2);
+  NewCol3.appendChild(Text3);
+
 };
 
 $(window).resize(function () {
