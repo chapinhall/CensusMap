@@ -35,10 +35,10 @@ function style(feature) {
   }
 
 // Color Census Tracts
-// geojson = L.geoJson(tracts, {style: style}).addTo(map);
+geojson = L.geoJson(tracts, {style: style}).addTo(map);
 
 //Color Neighborhoods
-geojson = L.geoJson(neighborhoods, {style: style}).addTo(map);
+// geojson = L.geoJson(neighborhoods, {style: style}).addTo(map);
 
 // add draw interface for userArea
 var drawnItems = new L.LayerGroup();
@@ -79,7 +79,6 @@ document.getElementById("delete").onclick = function () {
   userShapes = [];
     for (var i = 0; i < tracts.features.length; i++){
     tracts.features[i].properties.intersection = false;
-    tracts.features[i].properties.color = "#2c7fb8"
  };
   // var table = document.getElementById("results")
   var results = document.getElementById("displayTable");
@@ -91,8 +90,10 @@ document.getElementById("delete").onclick = function () {
 
  document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
-  calculations.population = calcPopulation(tracts);
-  addToTable(calculations);
+  var numResult = numCalculations(tracts);
+  for (calc in numResult){
+    addToTable(calc, numResult[calc])
+  }
 
  };
 
@@ -105,40 +106,44 @@ document.getElementById("delete").onclick = function () {
       var intersection = turf.intersect(userShape, tract['geometry']);
       if (intersection != null){
         tract.properties.intersection = true;
-        tract.properties.color = "#2ca25f"
         var tractArea = turf.area(tract);
         var intersectionArea = turf.area(intersection);
         tract.properties.overlap = intersectionArea / tractArea;
-        console.log(tract.properties.overlap);
 
       }
     }
   }
 };
 
- function calcPopulation(tracts)
+ function numCalculations(tracts)
 {
-  var pop = 0;
+  var Num_Kids_A0to2 = 0;
+  var Num_Kids_A3to4 = 0;
+  var Num_No_Cars = 0;
   for (var i = 0; i < tracts.features.length; i++){
       var tract = tracts.features[i];
-    if (tract.properties.intersection){
-        pop = (tract.properties.population * tract.properties.overlap) + pop;
+    if (tract.properties.intersection && tract.properties.Num_Kids_A3to4 !== undefined && tract.properties.Num_Kids_A0to2 !== undefined){
+        Num_Kids_A0to2 = (Number(tract.properties.Num_Kids_A0to2) * tract.properties.overlap) + Num_Kids_A0to2;
+        Num_Kids_A3to4 = (Number(tract.properties.Num_Kids_A3to4) * tract.properties.overlap) + Num_Kids_A3to4;
+        
+
       }
  };
- console.log(pop);
- return Math.round(pop);
+ var numResult = {"Number of Children Age 0 to 2": Math.round(Num_Kids_A0to2),
+ "Number of Children Age 3 to 4": Math.round(Num_Kids_A3to4)}
+ return numResult;
 
 };
 
-function addToTable(calculations)
+function addToTable(label, value)
 {
 
   var table = document.getElementById("displayTable")
   var NewRow = document.createElement("tr")
   var NewCol1 = document.createElement("td")
   var NewCol2 = document.createElement("td")
-  var Text1 = document.createTextNode("Estimated Population")
-  var Text2 = document.createTextNode(calculations.population.toString())
+  var Text1 = document.createTextNode(label)
+  var Text2 = document.createTextNode(value.toString())
 
   table.appendChild(NewRow);
   NewRow.appendChild(NewCol1);
