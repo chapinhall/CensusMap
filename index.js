@@ -119,18 +119,36 @@ document.getElementById("delete").onclick = function () {
 {
   var Num_Kids_A0to2 = 0;
   var Num_Kids_A3to4 = 0;
-  var Num_No_Cars = 0;
+  var Num_NoCars = 0;
+  var Num_Kids_AllParentsWorking = 0;
+  var Num_SinglePar_OwnKidLt6 = 0;
+  var Num_LtHsEd = 0;
+
   for (var i = 0; i < tracts.features.length; i++){
       var tract = tracts.features[i];
-    if (tract.properties.intersection && tract.properties.Num_Kids_A3to4 !== undefined && tract.properties.Num_Kids_A0to2 !== undefined){
+    if (tract.properties.intersection && tract.properties.Num_Kids_A3to4 !== undefined && tract.properties.Num_Kids_A0to2 !== undefined
+    && tract.properties.Num_NoCars !== undefined && tract.properties.Num_Kids_AllParentsWorking !== undefined
+  && tract.properties.Num_SinglePar_OwnKidLt6 !== undefined && tract.properties.Num_LtHsEd !== undefined ){
         Num_Kids_A0to2 = (Number(tract.properties.Num_Kids_A0to2) * tract.properties.overlap) + Num_Kids_A0to2;
         Num_Kids_A3to4 = (Number(tract.properties.Num_Kids_A3to4) * tract.properties.overlap) + Num_Kids_A3to4;
-        
+        Num_NoCars = (Number(tract.properties.Num_NoCars) * tract.properties.overlap) + Num_NoCars;
+        Num_Kids_AllParentsWorking = (Number(tract.properties.Num_Kids_AllParentsWorking) * tract.properties.overlap) + Num_Kids_AllParentsWorking;
+        Num_SinglePar_OwnKidLt6 = (Number(tract.properties.Num_SinglePar_OwnKidLt6) * tract.properties.overlap) + Num_SinglePar_OwnKidLt6;
+        Num_LtHsEd = (Number(tract.properties.Num_LtHsEd) * tract.properties.overlap) + Num_LtHsEd;
+
+
 
       }
  };
  var numResult = {"Number of Children Age 0 to 2": Math.round(Num_Kids_A0to2),
- "Number of Children Age 3 to 4": Math.round(Num_Kids_A3to4)}
+ "Number of Children Age 3 to 4": Math.round(Num_Kids_A3to4),
+ "Number of Household Without Cars": Math.round(Num_NoCars),
+ "Number of Children With All Parents Working": Math.round(Num_Kids_AllParentsWorking),
+ "Number of Single Parents with Kids Less Than 6": Math.round(Num_SinglePar_OwnKidLt6),
+ "Number of Adults Less Than High School Education": Math.round(Num_LtHsEd)
+
+
+}
  return numResult;
 
 };
