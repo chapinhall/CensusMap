@@ -21,16 +21,101 @@
   </style>
 </head>
 <body>
-    <div class="container-fluid">
+  <div class="container-fluid">
     <a class="page-header" href="/CensusMap">Chicago Census Mapper</a>
   </div>
-      <div class = "row">
+  <div class = "row">
 
     <div class="col-sm-5 no-padding">
       <div id="map" class="desktop-only"></div>
       <div id='menu' class="desktop-only">
         <input id = "calculate" class = "btn btn-success" type = "submit" value = "Run" disabled = "disabled"/>
         <input id = "delete" class = "btn btn-danger" "type" = "submit" value = "Remove" disabled = "disabled"/>
+        <div class="btn-group">
+          <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Jump to
+          </button>
+          <ul class="dropdown-menu scrollable-menu" role="menu">
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Albany Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Archer Heights</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Armour Square</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Ashburn</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Auburn Gresham</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Austin</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Avalon Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Avondale</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Belmont Cragin</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Beverly</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Bridgeport</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Brighton Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Burnside</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Calumet Heights</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Chatham</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Chicago Lawn</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Clearing</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Douglas</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Dunning</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">East Garfield Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">East Side</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Edgewater</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Edison Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Englewood</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Forest Glen</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Fuller Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Gage Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Garfield Ridge</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Grand Boulevard</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Greater Grand Crossing</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Hegewisch</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Hermosa</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Humboldt Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Hyde Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Irving Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Jefferson Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Kenwood</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Lakeview</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Lincoln Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Lincoln Square</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Logan Square</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Loop</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Lower West Side</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">McKinley Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Montclare</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Morgan Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Mount Greenwood</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Near North Side</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Near South Side</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Near West Side</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">New City</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">North Center</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">North Lawndale</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">North Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Norwood Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Ohare</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Oakland</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Portage Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Pullman</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Riverdale</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Rogers Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Roseland</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">South Chicago</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">South Deering</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">South Lawndale</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">South Shore</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Uptown</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Washington Heights</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Washington Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Elsdon</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Englewood</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Garfield Park</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Lawn</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Pullman</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Ridge</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">West Town</button></li>
+            <li><button class="dropdown-item btn-info btn-sm" type="button">Woodlawn</button></li>
+
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -45,90 +130,91 @@
         <div id="intro" class="tab-pane fade in active">
           <h1>Introduction</h1>
           <p class="intro-blurb">
-          Welcome to the Census Mapping Tool.
+            Welcome to the Census Mapping Tool.
           </p>
           <p>
-          This tool allows you to select your own geography.
+            This tool allows you to select your own geography.
           </p>
 
           <p>
-          Estimated statistics are computed from the Census Bureau
-          based on your selected geography.
+            Estimated statistics are computed from the Census Bureau
+            based on your selected geography.
           </p>
 
           <p class="h3">
-          Directions
+            Directions
           </p>
 
           <p>
-          First draw your geography using the icon on the top right corner of the map.
+            First draw your geography using the icon on the top right corner of the map.
           </p>
           <p>
-          If your geography is discontinuous, you may draw multiple shapes.
+            If your geography is discontinuous, you may draw multiple shapes.
           </p>
           <p>
-          Once you have created your geography of interest, click the "Run" button to compute
-          your aggregated estimates.
+            Once you have created your geography of interest, click the "Run" button to compute
+            your aggregated estimates.
           </p>
 
           <p>
-          To start over, either click the "Remove" button to clear your selected geographies
-          or refresh the page.
-        </p>
-        <p class="h3">
-          View
-        </p>
-        <p>
-          Click the Results Tab to see your results
-        <p>
-        </div>
-        <div id="about" class="tab-pane fade">
-          <h2>About</h2>
+            To start over, either click the "Remove" button to clear your selected geographies
+            or refresh the page.
+          </p>
           <p class="h3">
-          Methodology
+            View
           </p>
           <p>
-          Data is drawn from the 2010 Census
-          </p>
-          <p>
-          Your selected geography is matched to corresponding Census Tracts
-          </p>
-          <p>
-          An estimate is computed for your geography using the corresponding Census Tracts
-          </p>
-          <p>
-          For example, if your geography contains 10 Census Tracts,
-          these tracts would be summed together to get the corresponding estimated statistic
-          </p>
-          <p>
-          If your geography is only a partial match to a Census Tract, the percent overlap
-          of the two geographies will be used as the percent to add to the estimate statistic
-          </p>
-          <p>
-          For example, a census tract that 10% within the selected geography will contribute 10% of
-          its value to the overall estimated statistic
-          </p>
-          <p>
-          Results are displayed in the Results Section
-          </p>
-        </div>
-        <div id="results" class="tab-pane fade">
-          <h2>Results</h2>
-          <p>
-          Select a geography and click "Run" to view results.
-          </p>
-          <table id = "displayTable">
-          </table>
+            Click the Results Tab to see your results
+            <p>
+            </div>
+            <div id="about" class="tab-pane fade">
+              <h2>About</h2>
+              <p class="h3">
+                Methodology
+              </p>
+              <p>
+                Data is drawn from the 2010 Census
+              </p>
+              <p>
+                Your selected geography is matched to corresponding Census Tracts
+              </p>
+              <p>
+                An estimate is computed for your geography using the corresponding Census Tracts
+              </p>
+              <p>
+                For example, if your geography contains 10 Census Tracts,
+                these tracts would be summed together to get the corresponding estimated statistic
+              </p>
+              <p>
+                If your geography is only a partial match to a Census Tract, the percent overlap
+                of the two geographies will be used as the percent to add to the estimate statistic
+              </p>
+              <p>
+                For example, a census tract that 10% within the selected geography will contribute 10% of
+                its value to the overall estimated statistic
+              </p>
+              <p>
+                Results are displayed in the Results Section
+              </p>
+            </div>
+            <div id="results" class="tab-pane fade">
+              <h2>Results</h2>
+              <p>
+                Select a geography and click "Run" to view results.
+              </p>
+              <table id = "displayTable">
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
 
-<script type="text/javascript" src="tracts.js"></script>
-<script type="text/javascript" src="neighborhoods.js"></script>
-<script type="text/javascript" src="index.js">
-</script>
+    <script type="text/javascript" src="layers/tracts.js"></script>
+    <script type="text/javascript" src="layers/commAreas.js"></script>
+    <script type="text/javascript" src="layers/blocks.js"></script>
+    <script type="text/javascript" src="index.js">
+    </script>
 
-</body>
-</html>
+  </body>
+  </html>

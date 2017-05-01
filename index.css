@@ -64,3 +64,8 @@ h3, h4, h5, .h3, .h4, .h5 {
     font-family: 'Alegreya', serif;
     color: #e77960;
   }
+  .scrollable-menu {
+      height: auto;
+      max-height: 180px;
+      overflow-x: hidden;
+  }

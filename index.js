@@ -19,18 +19,15 @@ function style(feature) {
     };
   }
 
-// Color Census Tracts
-geojson = L.geoJson(tracts, {style: style}).addTo(map);
-
 //Color Neighborhoods
-// geojson = L.geoJson(neighborhoods, {style: style}).addTo(map);
+geojson = L.geoJson(commAreas, {style: style}).addTo(map);
 
 // add draw interface for userArea
 var drawnItems = new L.LayerGroup();
 L.drawLocal.draw.toolbar.buttons.polygon = 'Draw the area you want examine';
      map.addLayer(drawnItems);
      var drawControl = new L.Control.Draw({
-         position: 'topright',
+         position: 'bottomright',
          draw: {
           circle: false,
           rectangle: false,
@@ -88,6 +85,20 @@ document.getElementById("delete").onclick = function () {
   }
  };
 
+ $(document.body).on('click', '.dropdown-menu li button', function (e) {
+     var selected = $(this).text();
+     for (var i = 0; i < commAreas.features.length; i++){
+       var commArea = commAreas.features[i];
+       if (commArea.properties.community.toLowerCase() === selected.toLowerCase()){
+         var centroid = turf.centroid(commArea);
+         console.log(centroid.geometry.coordinates)
+         var coordinates = centroid.geometry.coordinates
+         var leafletCoordinates = [coordinates[1],coordinates[0]];
+        map.setView(leafletCoordinates,13);
+       }
+     }
+ });
+
  function determineIntersect(userShapes)
 {
   for (var i = 0; i < userShapes.length; i++){
@@ -135,6 +146,9 @@ function addToTable(row, stat, label)
   var NewCol1 = document.createElement("td")
   var NewCol2 = document.createElement("td")
   var NewCol3 = document.createElement("td")
+  var HeadCol1 = document.createElement("th")
+  var HeadCol2 = document.createElement("th")
+  var HeadCol3 = document.createElement("th")
   var Text1 = document.createTextNode(label)
   var Text2 = document.createTextNode(row[stat].toString())
   var Text3 = document.createTextNode(row['perc'].toString())
