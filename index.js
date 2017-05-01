@@ -83,6 +83,7 @@ document.getElementById("delete").onclick = function () {
     var row = numCalculations(numVars[i],tracts);
     addToTable(row, numVars[i],labels[i]);
   }
+  $('[href="#results"]').tab('show');
  };
 
  $(document.body).on('click', '.dropdown-menu li button', function (e) {
@@ -169,3 +170,8 @@ $(window).resize(function () {
   $('#map').css('height', (h - offsetTop));
   $('#content').css('height', (h - offsetTop));
 }).resize();
+
+// $('#nav  a').click(function (e) {
+//   e.preventDefault()
+//   $(this).tab('show')
+// })
