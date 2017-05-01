@@ -86,21 +86,21 @@ document.getElementById("calculate").onclick = function () {
   }
   $('[href="#results"]').tab('show');
 };
-//
-// // Jump To Button Event Handler
-// $(document.body).on('click', '.dropdown-menu li button', function (e) {
-//   var selected = $(this).text();
-//   for (var i = 0; i < commAreas.features.length; i++){
-//     var commArea = commAreas.features[i];
-//     if (commArea.properties.community.toLowerCase() === selected.toLowerCase()){
-//       var centroid = turf.centroid(commArea);
-//       console.log(centroid.geometry.coordinates)
-//       var coordinates = centroid.geometry.coordinates
-//       var leafletCoordinates = [coordinates[1],coordinates[0]];
-//       map.setView(leafletCoordinates,13);
-//     }
-//   }
-// });
+
+// Jump To Button Event Handler
+$(document.body).on('click', '.dropdown-menu li button', function (e) {
+  var selected = $(this).text();
+  for (var i = 0; i < commAreas.features.length; i++){
+    var commArea = commAreas.features[i];
+    if (commArea.properties.community.toLowerCase() === selected.toLowerCase()){
+      var centroid = turf.centroid(commArea);
+      console.log(centroid.geometry.coordinates)
+      var coordinates = centroid.geometry.coordinates
+      var leafletCoordinates = [coordinates[1],coordinates[0]];
+      map.setView(leafletCoordinates,13);
+    }
+  }
+});
 //
 // Function to Determine which tracts intersect userShapes
 function determineIntersect(userShapes)
@@ -124,7 +124,7 @@ function determineIntersect(userShapes)
 // Function to aggregate statistics
 function numCalculations(stat, tracts)
 {
-  var row = {stat};
+  var row = {stat: ""};
   var wgt = stat.replace("Num", "Wgt");
   row[stat] = 0;
   row[wgt] = 0;
