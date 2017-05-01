@@ -8,46 +8,42 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
   maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
 }).addTo(map);
 
-// L.tileLayer('http://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
-//     id: 'mapbox.light',
-// }).addTo(map);
+// set styling of Areas
+function style(feature) {
+  return {
+    weight: 2,
+    opacity: 1,
+    color: '#e8b19c',
+    dashArray: '3',
+    fillOpacity: 0.3,
+    fillColor: ('#e8b19c')
+  };
+}
 
-//set styling of Areas
-// function style(feature) {
-//   return {
-//     weight: 2,
-//     opacity: 1,
-//     color: '#e8b19c',
-//     dashArray: '3',
-//     fillOpacity: 0.3,
-//     fillColor: ('#e8b19c')
-//   };
-// }
-//
-// //Color Neighborhoods
-// geojson = L.geoJson(commAreas, {style: style}).addTo(map);
-//
-// // Add draw interface for userArea
-// var drawnItems = new L.LayerGroup();
-// L.drawLocal.draw.toolbar.buttons.polygon = 'Draw the area you want examine';
-// map.addLayer(drawnItems);
-// var drawControl = new L.Control.Draw({
-//   position: 'bottomright',
-//   draw: {
-//     circle: false,
-//     rectangle: false,
-//     polyline: false,
-//     marker: false,
-//     polygon: {
-//       shapeOptions:{
-//         color: 'green'
-//       }
-//     },
-//
-//   },
-// });
-// map.addControl(drawControl);
-//
+//Color Neighborhoods
+geojson = L.geoJson(commAreas, {style: style}).addTo(map);
+
+// Add draw interface for userArea
+var drawnItems = new L.LayerGroup();
+L.drawLocal.draw.toolbar.buttons.polygon = 'Draw the area you want examine';
+map.addLayer(drawnItems);
+var drawControl = new L.Control.Draw({
+  position: 'bottomright',
+  draw: {
+    circle: false,
+    rectangle: false,
+    polyline: false,
+    marker: false,
+    polygon: {
+      shapeOptions:{
+        color: 'green'
+      }
+    },
+
+  },
+});
+map.addControl(drawControl);
+
 // // Draw Event Handler.
 // map.on("draw:created", function (e) {
 //   var type = e.layerType,
