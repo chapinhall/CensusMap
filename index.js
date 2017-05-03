@@ -65,7 +65,9 @@ document.getElementById("delete").onclick = function () {
   for (var i = 0; i < tracts.features.length; i++){
     tracts.features[i].properties.intersection = false;
   };
-  var results = document.getElementById("displayTable");
+  var results = document.getElementById("eligible");
+  document.getElementById("eligibleQuestion").remove();
+
   while (results.firstChild){
     results.removeChild(results.firstChild);
   }
@@ -74,12 +76,13 @@ document.getElementById("delete").onclick = function () {
 // Calculate Button Event Handler
 document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
-  var results = document.getElementById("displayTable");
+  var results = document.getElementById("eligible");
   while (results.firstChild){
     results.removeChild(results.firstChild);
   }
   var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4", "Num_LtHsEd"]
   var labels = ["Kids Age 0 to 2", "Kids Age 3 to 4", "Less than High School Education"]
+  addQuestion();
   for (var i = 0; i < numVars.length; i++){
     var row = numCalculations(numVars[i],tracts);
     addToTable(row, numVars[i],labels[i]);
@@ -142,20 +145,31 @@ function numCalculations(stat, tracts)
 
 };
 
+function addQuestion(){
+  var section = document.getElementById('results')
+  var table = document.getElementById('eligible')
+  var question = document.createElement("h2");
+  question.setAttribute("id", "eligibleQuestion");
+  var qText = document.createTextNode("How many children are eligible for our program?");
+  var insertedNode = section.insertBefore(question,table);
+  question.appendChild(qText);
+
+}
+
 // Function to add row to results table
 function addToTable(row, stat, label)
 {
-  var table = document.getElementById("displayTable")
-  var NewRow = document.createElement("tr")
-  var NewCol1 = document.createElement("td")
-  var NewCol2 = document.createElement("td")
-  var NewCol3 = document.createElement("td")
-  var HeadCol1 = document.createElement("th")
-  var HeadCol2 = document.createElement("th")
-  var HeadCol3 = document.createElement("th")
-  var Text1 = document.createTextNode(label)
-  var Text2 = document.createTextNode(row[stat].toString())
-  var Text3 = document.createTextNode(row['perc'].toString())
+  var table = document.getElementById("eligible");
+  var NewRow = document.createElement("tr");
+  var NewCol1 = document.createElement("td");
+  var NewCol2 = document.createElement("td");
+  var NewCol3 = document.createElement("td");
+  var HeadCol1 = document.createElement("th");
+  var HeadCol2 = document.createElement("th");
+  var HeadCol3 = document.createElement("th");
+  var Text1 = document.createTextNode(label);
+  var Text2 = document.createTextNode(row[stat].toString());
+  var Text3 = document.createTextNode(row['perc'].toString());
 
   table.appendChild(NewRow);
   NewRow.appendChild(NewCol1);

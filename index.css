@@ -36,6 +36,20 @@ h3, h4, h5, .h3, .h4, .h5 {
   width:30%;
 }
 
+/*#wrap {
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#map {
+  padding: 0px;
+  height: 100%;
+}*/
+
+
+
+
+
 #map-nav {
   display: inline-block;
   margin-left: 15px;
