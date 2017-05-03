@@ -109,18 +109,20 @@ document.getElementById("calculate").onclick = function () {
   // Add results to Eligible Table
   var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
   var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
+  var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
   var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
   var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
+  var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
   addQuestion("How many children are eligible for our program?", "eligible", "eligibleQuestion");
   for (var i = 0; i < eligibleVars.length; i++){
     var row = numCalculations(eligibleVars[i],tracts);
-    addToTable("eligible", row, eligibleVars[i],eligibleLabels[i]);
+    addToTable("eligible", row, eligibleVars[i],eligibleLabels[i], eligibleSource[i]);
   }
 
   addQuestion("What needs are in the community?", "need", "needQuestion");
   for (var i = 0; i < needVars.length; i++){
     var row = numCalculations(needVars[i],tracts);
-    addToTable("need", row, needVars[i],needLabels[i]);
+    addToTable("need", row, needVars[i],needLabels[i], eligibleSource[i]);
   }
 
   $('[href="#results"]').tab('show');
@@ -193,26 +195,38 @@ function addQuestion(content, tableName, questionId){
 }
 
 // Function to add row to results table
-function addToTable(tableName, row, stat, label)
+function addToTable(tableName, row, stat, label, source)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
+
+  var statName = document.createElement("tooltiptext")
+  statName.setAttribute("title", source);
+   $('<p>' + label + '</p>').appendTo(statName);
+
   var NewCol1 = document.createElement("td");
   var NewCol2 = document.createElement("td");
   var NewCol3 = document.createElement("td");
   var HeadCol1 = document.createElement("th");
   var HeadCol2 = document.createElement("th");
   var HeadCol3 = document.createElement("th");
-  var Text1 = document.createTextNode(label);
   var Text2 = document.createTextNode(row[stat].toString());
   var Text3 = document.createTextNode(row['perc'].toString());
 
   table.appendChild(NewRow);
+  NewCol1.appendChild(statName);
   NewRow.appendChild(NewCol1);
   NewRow.appendChild(NewCol2);
   NewRow.appendChild(NewCol3);
-  NewCol1.appendChild(Text1);
   NewCol2.appendChild(Text2);
   NewCol3.appendChild(Text3);
+
+//   <table>
+//     <tr>
+//         <td>
+//             <a href="#" title="John Smith lives in New York."> John Smith </a>
+//         </td>
+//     </tr>
+// </table>
 
 };
