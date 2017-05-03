@@ -66,7 +66,10 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.intersection = false;
   };
   var results = document.getElementById("eligible");
-  document.getElementById("eligibleQuestion").remove();
+  var question = document.getElementById("eligibleQuestion")
+  if ($(question).length){
+    question.remove();
+  }
 
   while (results.firstChild){
     results.removeChild(results.firstChild);
