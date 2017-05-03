@@ -210,8 +210,8 @@ function addToTable(tableName, row, stat, label, source)
   var HeadCol1 = document.createElement("th");
   var HeadCol2 = document.createElement("th");
   var HeadCol3 = document.createElement("th");
-  var Text2 = document.createTextNode(row[stat].toString());
-  var Text3 = document.createTextNode(row['perc'].toString());
+  var Text2 = document.createTextNode(row[stat].toLocaleString('en'));
+  var Text3 = document.createTextNode(row['perc'].toLocaleString('en', {style: "percent"}));
 
   table.appendChild(NewRow);
   NewCol1.appendChild(statName);
@@ -220,13 +220,4 @@ function addToTable(tableName, row, stat, label, source)
   NewRow.appendChild(NewCol3);
   NewCol2.appendChild(Text2);
   NewCol3.appendChild(Text3);
-
-//   <table>
-//     <tr>
-//         <td>
-//             <a href="#" title="John Smith lives in New York."> John Smith </a>
-//         </td>
-//     </tr>
-// </table>
-
 };
