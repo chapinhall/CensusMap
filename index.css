@@ -68,6 +68,8 @@ h3, h4, h5, .h3, .h4, .h5 {
   width:40%;
   padding-top: 12px;
   padding-bottom: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
   text-align: left;
   color: #eab19c;
   border: 3px solid black;

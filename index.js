@@ -76,17 +76,26 @@ document.getElementById("delete").onclick = function () {
 // Calculate Button Event Handler
 document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
+  // Remove previous results before displaying new results
   var results = document.getElementById("eligible");
   while (results.firstChild){
     results.removeChild(results.firstChild);
   }
-  var numVars = ["Num_Kids_A0to2", "Num_Kids_A3to4", "Num_LtHsEd"]
-  var labels = ["Kids Age 0 to 2", "Kids Age 3 to 4", "Less than High School Education"]
-  addQuestion();
-  for (var i = 0; i < numVars.length; i++){
-    var row = numCalculations(numVars[i],tracts);
-    addToTable(row, numVars[i],labels[i]);
+  var question = document.getElementById("eligibleQuestion")
+  if ($(question).length){
+    question.remove();
   }
+  // Add results to Eligible Table
+  var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
+  var eligibleLabels = ["Kids Age 0 to 2", "Kids Age 3 to 4"]
+  var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
+  var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
+  addQuestion("How many children are eligible for our program?", "eligible", "eligibleQuestion");
+  for (var i = 0; i < eligibleVars.length; i++){
+    var row = numCalculations(eligibleVars[i],tracts);
+    addToTable("eligible", row, eligibleVars[i],eligibleLabels[i]);
+  }
+
   $('[href="#results"]').tab('show');
 };
 
@@ -145,21 +154,21 @@ function numCalculations(stat, tracts)
 
 };
 
-function addQuestion(){
+function addQuestion(content, tableName, questionId){
   var section = document.getElementById('results')
-  var table = document.getElementById('eligible')
+  var table = document.getElementById(tableName)
   var question = document.createElement("h2");
-  question.setAttribute("id", "eligibleQuestion");
-  var qText = document.createTextNode("How many children are eligible for our program?");
+  question.setAttribute("id", questionId);
+  var qText = document.createTextNode(content);
   var insertedNode = section.insertBefore(question,table);
   question.appendChild(qText);
 
 }
 
 // Function to add row to results table
-function addToTable(row, stat, label)
+function addToTable(tableName, row, stat, label)
 {
-  var table = document.getElementById("eligible");
+  var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
   var NewCol1 = document.createElement("td");
   var NewCol2 = document.createElement("td");
