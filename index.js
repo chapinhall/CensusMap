@@ -186,7 +186,7 @@ function numCalculations(stat, tracts)
 function addQuestion(content, tableName, questionId){
   var section = document.getElementById('results')
   var table = document.getElementById(tableName)
-  var question = document.createElement("h2");
+  var question = document.createElement("h4");
   question.setAttribute("id", questionId);
   var qText = document.createTextNode(content);
   var insertedNode = section.insertBefore(question,table);
