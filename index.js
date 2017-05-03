@@ -108,7 +108,7 @@ document.getElementById("calculate").onclick = function () {
   }
   // Add results to Eligible Table
   var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
-  var eligibleLabels = ["Kids Age 0 to 2", "Kids Age 3 to 4"]
+  var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
   var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
   var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
   addQuestion("How many children are eligible for our program?", "eligible", "eligibleQuestion");
