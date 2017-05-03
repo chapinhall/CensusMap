@@ -66,14 +66,24 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.intersection = false;
   };
   var results = document.getElementById("eligible");
+  var results2 = document.getElementById("need");
   var question = document.getElementById("eligibleQuestion")
   if ($(question).length){
     question.remove();
   }
+  var question2 = document.getElementById("needQuestion")
+  if ($(question2).length){
+    question2.remove();
+  }
+
 
   while (results.firstChild){
     results.removeChild(results.firstChild);
   }
+
+    while (results2.firstChild){
+      results2.removeChild(results2.firstChild);
+    }
 };
 
 // Calculate Button Event Handler
@@ -81,12 +91,20 @@ document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
   // Remove previous results before displaying new results
   var results = document.getElementById("eligible");
+  var results2 = document.getElementById("need");
   while (results.firstChild){
     results.removeChild(results.firstChild);
+  }
+  while (results2.firstChild){
+    results2.removeChild(results2.firstChild);
   }
   var question = document.getElementById("eligibleQuestion")
   if ($(question).length){
     question.remove();
+  }
+  var question2 = document.getElementById("needQuestion")
+  if ($(question2).length){
+    question2.remove();
   }
   // Add results to Eligible Table
   var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
@@ -97,6 +115,12 @@ document.getElementById("calculate").onclick = function () {
   for (var i = 0; i < eligibleVars.length; i++){
     var row = numCalculations(eligibleVars[i],tracts);
     addToTable("eligible", row, eligibleVars[i],eligibleLabels[i]);
+  }
+
+  addQuestion("What needs are in the community?", "need", "needQuestion");
+  for (var i = 0; i < needVars.length; i++){
+    var row = numCalculations(needVars[i],tracts);
+    addToTable("need", row, needVars[i],needLabels[i]);
   }
 
   $('[href="#results"]').tab('show');
