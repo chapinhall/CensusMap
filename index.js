@@ -1,11 +1,5 @@
 var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
-var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
-var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
-var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
-var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
-var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
-var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
   maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
@@ -42,7 +36,6 @@ var drawControl = new L.Control.Draw({
         color: 'green'
       }
     },
-
   },
 });
 map.addControl(drawControl);
@@ -53,7 +46,6 @@ map.on("draw:created", function (e) {
   userArea = e.layer;
   drawnItems.addLayer(userArea);
   $('#calculate').removeAttr("disabled");
-
   $('#delete').removeAttr("disabled")
   userGeojson = userArea.toGeoJSON().geometry;
   userShapes.push(userGeojson);
@@ -69,7 +61,6 @@ document.getElementById("delete").onclick = function () {
     tracts.features[i].properties.intersection = false;
   };
   resetTables();
-
 };
 
 // Calculate Button Event Handler
@@ -99,7 +90,7 @@ $(document.body).on('click', '.dropdown-menu li button', function (e) {
     }
   }
 });
-//
+
 // Function to Determine which tracts intersect userShapes
 function determineIntersect(userShapes)
 {
@@ -113,7 +104,6 @@ function determineIntersect(userShapes)
         var tractArea = turf.area(tract);
         var intersectionArea = turf.area(intersection);
         tract.properties.overlap = intersectionArea / tractArea;
-
       }
     }
   }
@@ -137,7 +127,6 @@ function numCalculations(stat, tracts)
   row[stat] = Math.round(row[stat]);
   row['perc'] = (Math.floor((row[stat] / row[wgt]) * 100)).toString().concat("%");
   return row;
-
 };
 
 function addTable(table){
@@ -157,7 +146,6 @@ function addQuestion(content, tableName, questionId){
   var qText = document.createTextNode(content);
   var insertedNode = section.insertBefore(question,table);
   question.appendChild(qText);
-
 }
 
 // Function to add row to results table
@@ -168,12 +156,11 @@ function addRow(tableName, row, stat, label, source)
 
   var statName = document.createElement("tooltiptext")
   statName.setAttribute("title", source);
-   $('<p>' + label + '</p>').appendTo(statName);
+  $('<p>' + label + '</p>').appendTo(statName);
 
   var NewCol1 = document.createElement("td");
   var NewCol2 = document.createElement("td");
   var NewCol3 = document.createElement("td");
-
 
   var HeadCol1 = document.createElement("th");
   var HeadCol2 = document.createElement("th");
@@ -201,9 +188,9 @@ function resetTables()
     var question = document.getElementById(question_names[i]);
     if ($(question).length){
       question.remove();
-       }
+    }
     while (results.firstChild){
       results.removeChild(results.firstChild);
-      }
     }
+  }
 };
