@@ -77,27 +77,11 @@ document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
   // Remove previous results before displaying new results
   resetTables();
-  // Add results to Eligible Table
-  // var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
-  // var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
-  // var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
-  // var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
-  // var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
-  // var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
+  // Add tables
+  addTable(eligible);
+  addTable(need);
 
-
-  addTable(eligibleVars, eligibleLabels, eligibleSource, "eligible", "eligibleQuestion" ,"How many children are eligible for our program?")
-  // for (var i = 0; i < eligibleVars.length; i++){
-  //   var row = numCalculations(eligibleVars[i],tracts);
-  //   addRow("eligible", row, eligibleVars[i],eligibleLabels[i], eligibleSource[i]);
-  // }
-
-  // addQuestion("What needs are in the community?", "need", "needQuestion");
-  // for (var i = 0; i < needVars.length; i++){
-  //   var row = numCalculations(needVars[i],tracts);
-  //   addRow("need", row, needVars[i],needLabels[i], eligibleSource[i]);
-  // }
-
+  // Jump to results section
   $('[href="#results"]').tab('show');
 };
 
@@ -156,11 +140,11 @@ function numCalculations(stat, tracts)
 
 };
 
-function addTable(vars, labels, source, tableName, qName, qText){
-  addQuestion(qText, tableName, qName);
-  for (var i = 0; i < vars.length; i++){
-    var row = numCalculations(vars[i],tracts);
-    addRow(tableName, row, vars[i],labels[i], source[i]);
+function addTable(table){
+  addQuestion(table.qText, table.name, table.qId);
+  for (var i = 0; i < table.vars.length; i++){
+    var row = numCalculations(table.vars[i],tracts);
+    addRow(table.name, row, table.vars[i],table.labels[i], table.source[i]);
   }
 
 };
