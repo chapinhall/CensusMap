@@ -1,8 +1,11 @@
-
-var mapboxAccessToken = 'pk.eyJ1IjoicG1hY2siLCJhIjoiY2l0cTJkN3N3MDA4ZTJvbnhoeG12MDM5ZyJ9.ISJHx3VHMvhQade2UQAIZg';
 var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
-var calculations = {};
+var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
+var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
+var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
+var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
+var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
+var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
   maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
@@ -65,65 +68,35 @@ document.getElementById("delete").onclick = function () {
   for (var i = 0; i < tracts.features.length; i++){
     tracts.features[i].properties.intersection = false;
   };
-  var results = document.getElementById("eligible");
-  var results2 = document.getElementById("need");
-  var question = document.getElementById("eligibleQuestion")
-  if ($(question).length){
-    question.remove();
-  }
-  var question2 = document.getElementById("needQuestion")
-  if ($(question2).length){
-    question2.remove();
-  }
+  resetTables();
 
-
-  while (results.firstChild){
-    results.removeChild(results.firstChild);
-  }
-
-    while (results2.firstChild){
-      results2.removeChild(results2.firstChild);
-    }
 };
 
 // Calculate Button Event Handler
 document.getElementById("calculate").onclick = function () {
   determineIntersect(userShapes);
   // Remove previous results before displaying new results
-  var results = document.getElementById("eligible");
-  var results2 = document.getElementById("need");
-  while (results.firstChild){
-    results.removeChild(results.firstChild);
-  }
-  while (results2.firstChild){
-    results2.removeChild(results2.firstChild);
-  }
-  var question = document.getElementById("eligibleQuestion")
-  if ($(question).length){
-    question.remove();
-  }
-  var question2 = document.getElementById("needQuestion")
-  if ($(question2).length){
-    question2.remove();
-  }
+  resetTables();
   // Add results to Eligible Table
-  var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
-  var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
-  var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
-  var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
-  var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
-  var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
-  addQuestion("How many children are eligible for our program?", "eligible", "eligibleQuestion");
-  for (var i = 0; i < eligibleVars.length; i++){
-    var row = numCalculations(eligibleVars[i],tracts);
-    addToTable("eligible", row, eligibleVars[i],eligibleLabels[i], eligibleSource[i]);
-  }
+  // var eligibleVars = ["Num_Kids_A0to2", "Num_Kids_A3to4"]
+  // var eligibleLabels = ["Children Age 0 to 2", "Children Age 3 to 4"]
+  // var eligibleSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
+  // var needVars = ["Num_Kids_AllParentsWorking", "Num_LtHsEd"]
+  // var needLabels = ["Number of Children in Households where Both Parents Work", "Less Than High School Education"]
+  // var needSource = ["ACS 2011 -2015", "ACS 2011 -2015"]
 
-  addQuestion("What needs are in the community?", "need", "needQuestion");
-  for (var i = 0; i < needVars.length; i++){
-    var row = numCalculations(needVars[i],tracts);
-    addToTable("need", row, needVars[i],needLabels[i], eligibleSource[i]);
-  }
+
+  addTable(eligibleVars, eligibleLabels, eligibleSource, "eligible", "eligibleQuestion" ,"How many children are eligible for our program?")
+  // for (var i = 0; i < eligibleVars.length; i++){
+  //   var row = numCalculations(eligibleVars[i],tracts);
+  //   addRow("eligible", row, eligibleVars[i],eligibleLabels[i], eligibleSource[i]);
+  // }
+
+  // addQuestion("What needs are in the community?", "need", "needQuestion");
+  // for (var i = 0; i < needVars.length; i++){
+  //   var row = numCalculations(needVars[i],tracts);
+  //   addRow("need", row, needVars[i],needLabels[i], eligibleSource[i]);
+  // }
 
   $('[href="#results"]').tab('show');
 };
@@ -183,6 +156,15 @@ function numCalculations(stat, tracts)
 
 };
 
+function addTable(vars, labels, source, tableName, qName, qText){
+  addQuestion(qText, tableName, qName);
+  for (var i = 0; i < vars.length; i++){
+    var row = numCalculations(vars[i],tracts);
+    addRow(tableName, row, vars[i],labels[i], source[i]);
+  }
+
+};
+
 function addQuestion(content, tableName, questionId){
   var section = document.getElementById('results')
   var table = document.getElementById(tableName)
@@ -195,7 +177,7 @@ function addQuestion(content, tableName, questionId){
 }
 
 // Function to add row to results table
-function addToTable(tableName, row, stat, label, source)
+function addRow(tableName, row, stat, label, source)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
@@ -207,9 +189,12 @@ function addToTable(tableName, row, stat, label, source)
   var NewCol1 = document.createElement("td");
   var NewCol2 = document.createElement("td");
   var NewCol3 = document.createElement("td");
+
+
   var HeadCol1 = document.createElement("th");
   var HeadCol2 = document.createElement("th");
   var HeadCol3 = document.createElement("th");
+
   var Text2 = document.createTextNode(row[stat].toLocaleString('en'));
   var Text3 = document.createTextNode(row['perc'].toLocaleString('en', {style: "percent"}));
 
@@ -220,4 +205,21 @@ function addToTable(tableName, row, stat, label, source)
   NewRow.appendChild(NewCol3);
   NewCol2.appendChild(Text2);
   NewCol3.appendChild(Text3);
+};
+
+// Reset Tables
+function resetTables()
+{
+  var table_names = ["eligible", "need"];
+  var question_names = ["eligibleQuestion", "needQuestion"];
+  for (var i = 0; i < table_names.length; i++){
+    var results = document.getElementById(table_names[i]);
+    var question = document.getElementById(question_names[i]);
+    if ($(question).length){
+      question.remove();
+       }
+    while (results.firstChild){
+      results.removeChild(results.firstChild);
+      }
+    }
 };
