@@ -132,8 +132,8 @@ function numCalculations(stat, tracts)
 function addTable(table){
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
-    var row = numCalculations(table.vars[i],tracts);
-    addRow(table.name, row, table.vars[i],table.labels[i], table.source[i]);
+    var row = numCalculations(table.vars[i].name,tracts);
+    addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source);
   }
 
 };
