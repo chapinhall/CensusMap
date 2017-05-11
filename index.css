@@ -22,6 +22,29 @@ h3, h4, h5, .h3, .h4, .h5 {
   color: #809DB9;
 }
 
+th, td {
+  width: 80px;
+  overflow: hidden;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: left;
+  color: #black;
+  border: 3px solid black;
+  background-color: #d6d6d6;
+  text-align:center;
+  }
+
+td#label{
+  width: 300px;
+  overflow: hidden;
+}
+  table {
+    width: 450 px;
+    table-layout: : fixed;
+  }
+
 
 .btn-success{
   width:30%;
@@ -55,18 +78,6 @@ h3, h4, h5, .h3, .h4, .h5 {
   text-align: center;
   line-height: normal;
 }
-#results th, td {
-  width:40%;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-left: 12px;
-  padding-right: 12px;
-  text-align: left;
-  color: #black;
-  border: 3px solid black;
-  background-color: #d6d6d6;
-  text-align:center;
-  }
 
   .scrollable-menu {
       height: auto;

@@ -114,8 +114,10 @@ function numCalculations(stat, tracts)
 {
   var row = {stat: ""};
   var wgt = stat.replace("Num", "Wgt");
+  var se = stat.replace("Num", "SE")
   row[stat] = 0;
   row[wgt] = 0;
+  row[se] = 0;
 
   for (var i = 0; i < tracts.features.length; i++){
     var tract = tracts.features[i];
@@ -159,6 +161,7 @@ function addRow(tableName, row, stat, label, source)
   $('<p>' + label + '</p>').appendTo(statName);
 
   var NewCol1 = document.createElement("td");
+  NewCol1.setAttribute("id", "label")
   var NewCol2 = document.createElement("td");
   var NewCol3 = document.createElement("td");
 
