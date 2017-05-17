@@ -70,6 +70,7 @@ document.getElementById("calculate").onclick = function () {
   resetTables();
   // Add tables
   addTable(need);
+  addTable(enroll);
 
   // Jump to results section
   $('[href="#results"]').tab('show');
@@ -111,19 +112,18 @@ function determineIntersect(userShapes)
 // Function to aggregate statistics
 function numCalculations(stat, tracts)
 {
-  var row = {stat: ""};
+  var row = {};
   var meas = stat.replace("n", "r");
   var meas_wgt = stat.replace("n", "w");
   var meas_se = stat + "_se"
 
   // Iniitialize values
+  row['name'] = stat;
   row['meas_aggregate_wgt'] = 0;
   row['meas_aggregate_mean'] = 0;
   row['meas_aggregate_var'] = 0;
   row[stat] = 0;
   row['intersectCount'] = 0;
-
-
 
   // Caclulate total weight for selection
   for (var i = 0; i < tracts.features.length; i++){
@@ -139,8 +139,15 @@ function numCalculations(stat, tracts)
   for (var i = 0; i < tracts.features.length; i++){
     var tract = tracts.features[i];
     if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
-      row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / tract.properties[meas_wgt]) * tract.properties[meas]);
-      row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
+      // Only add value if the wgt and count are more than zero
+      if (tract.properties[meas_wgt] > 0 && tract.properties[meas] > 0){
+        row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / tract.properties[meas_wgt]) * tract.properties[meas]);
+      }
+      // Only add value if the meas_aggregate_wgt is above zero
+      if (row['meas_aggregate_wgt'] > 0){
+        row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
+      }
+
 
     }
   };
@@ -165,6 +172,7 @@ function numCalculations(stat, tracts)
 
 
   return row;
+
 };
 
 function addTable(table){
@@ -177,6 +185,8 @@ function addTable(table){
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
     var row = numCalculations(table.vars[i].name,tracts);
+    console.log(table.vars[i].name);
+    console.log(row);
     addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
   }
 
@@ -249,8 +259,8 @@ function addRow(tableName, row, stat, label, source, pctLabel)
 // Reset Tables
 function resetTables()
 {
-  var table_names = ["eligible", "need"];
-  var question_names = ["eligibleQuestion", "needQuestion"];
+  var table_names = ["enroll", "need"];
+  var question_names = ["enrollQuestion", "needQuestion"];
   for (var i = 0; i < table_names.length; i++){
     var results = document.getElementById(table_names[i]);
     var question = document.getElementById(question_names[i]);
