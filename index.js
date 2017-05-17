@@ -69,7 +69,6 @@ document.getElementById("calculate").onclick = function () {
   // Remove previous results before displaying new results
   resetTables();
   // Add tables
-  addTable(eligible);
   addTable(need);
 
   // Jump to results section
@@ -113,32 +112,85 @@ function determineIntersect(userShapes)
 function numCalculations(stat, tracts)
 {
   var row = {stat: ""};
-  var wgt = stat.replace("Num", "Wgt");
-  var se = stat.replace("Num", "SE")
-  row[stat] = 0;
-  row[wgt] = 0;
-  row[se] = 0;
+  var meas = stat.replace("n", "r");
+  var meas_wgt = stat.replace("n", "w");
+  var meas_se = stat + "_se"
 
+  // Iniitialize values
+  row['meas_aggregate_wgt'] = 0;
+  row['meas_aggregate_mean'] = 0;
+  row['meas_aggregate_var'] = 0;
+  row[stat] = 0;
+  row['intersectCount'] = 0;
+
+
+
+  // Caclulate total weight for selection
   for (var i = 0; i < tracts.features.length; i++){
     var tract = tracts.features[i];
     if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
+      row['meas_aggregate_wgt'] = row['meas_aggregate_wgt'] + (Number(tract.properties[meas_wgt]) * tract.properties.overlap);
       row[stat] = (Number(tract.properties[stat]) * tract.properties.overlap) + row[stat];
-      row[wgt] = (Number(tract.properties[wgt]) * tract.properties.overlap) + row[wgt];
+      row['intersectCount'] = row['intersectCount'] + 1;
     }
   };
+
+  //Calculate mean and variance for measure
+  for (var i = 0; i < tracts.features.length; i++){
+    var tract = tracts.features[i];
+    if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
+      row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / tract.properties[meas_wgt]) * tract.properties[meas]);
+      row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
+
+    }
+  };
+  row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
+  row['meas_aggregate_cv'] = row['meas_aggregate_se'] / row['meas_aggregate_mean'];
+  if (row['meas_aggregate_cv'] > 0.4){
+    row['reliability'] = 'red';
+  }
+  if (row['meas_aggregate_cv'] <= 0.4 && row['meas_aggregate_cv'] > 0.12) {
+    row['reliability'] = 'yellow';
+  }
+  if (row['meas_aggregate_cv'] <= 0.12) {
+    row['reliability'] = 'green';
+  }
+
+
+
   row[stat] = Math.round(row[stat]);
-  row['perc'] = (Math.floor((row[stat] / row[wgt]) * 100)).toString().concat("%");
+
+  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100) / row['intersectCount'],2).toString().concat("%");
+
+
+
   return row;
 };
 
 function addTable(table){
+  // Add Header
+  addHeader(table,"Measure");
+  addHeader(table,"Reliability Indicator");
+  addHeader(table,"Estimated Number");
+  addHeader(table,"%");
+
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
     var row = numCalculations(table.vars[i].name,tracts);
-    addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source);
+    addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
   }
 
 };
+
+function addHeader(table, val){
+  var tableHead = document.getElementById(table.name)
+  var HeadCol = document.createElement("th");
+  var content = document.createTextNode(val);
+  HeadCol.appendChild(content);
+  tableHead.appendChild(HeadCol);
+}
+
+
 
 function addQuestion(content, tableName, questionId){
   var section = document.getElementById('results')
@@ -151,10 +203,11 @@ function addQuestion(content, tableName, questionId){
 }
 
 // Function to add row to results table
-function addRow(tableName, row, stat, label, source)
+function addRow(tableName, row, stat, label, source, pctLabel)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
+
 
   var statName = document.createElement("tooltiptext")
   statName.setAttribute("title", source);
@@ -165,20 +218,32 @@ function addRow(tableName, row, stat, label, source)
   var NewCol2 = document.createElement("td");
   var NewCol3 = document.createElement("td");
 
-  var HeadCol1 = document.createElement("th");
-  var HeadCol2 = document.createElement("th");
-  var HeadCol3 = document.createElement("th");
-
   var Text2 = document.createTextNode(row[stat].toLocaleString('en'));
-  var Text3 = document.createTextNode(row['perc'].toLocaleString('en', {style: "percent"}));
+
+  var percentName = document.createElement("tooltiptext")
+  percentName.setAttribute("title", pctLabel);
+  var percentText = document.createTextNode(row['perc'].toLocaleString('en', {style: "percent"}));
+  $(percentText).appendTo(percentName);
+
+
+  var NewCol4 = document.createElement("td");
+  var Text4 = document.createTextNode(row['reliability']);
+
+
+
+
+  // $('<p>' + (row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"} + '</p>')).appendTo(percentName);
+  // var Text3 = document.createTextNode(row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"}));
 
   table.appendChild(NewRow);
   NewCol1.appendChild(statName);
+  NewCol4.appendChild(Text4);
   NewRow.appendChild(NewCol1);
+  NewRow.appendChild(NewCol4);
   NewRow.appendChild(NewCol2);
   NewRow.appendChild(NewCol3);
   NewCol2.appendChild(Text2);
-  NewCol3.appendChild(Text3);
+  NewCol3.appendChild(percentName);
 };
 
 // Reset Tables

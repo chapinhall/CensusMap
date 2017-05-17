@@ -36,15 +36,15 @@ th, td {
   text-align:center;
   }
 
-td#label{
-  width: 300px;
-  overflow: hidden;
-}
+  td#label{
+    width: 300px;
+    overflow: hidden;
+  }
+
   table {
     width: 450 px;
     table-layout: : fixed;
   }
-
 
 .btn-success{
   width:30%;

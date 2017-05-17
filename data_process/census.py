@@ -4,21 +4,21 @@ import numpy as np
 import argparse
 
 def read_csv(csv_filename,id_csv_col):
-    df = pd.read_csv(args.csv_filename)
-    df = df[pd.notnull(df[args.id_csv_col])]
-    df[args.id_csv_col] = df[args.id_csv_col].astype(int)
-    print('CSV file has {} rows to merge'.format(len(df[args.id_csv_col])))
-    NumVars = list(df.filter(regex=("Num.*")).columns)
-    WgtVars = list(df.filter(regex=("Wgt.*")).columns)
-    PctVars = list(df.filter(regex=("Pct.*")).columns)
-    df[NumVars] = df[NumVars].fillna(0.0).astype(int)
-    df[WgtVars] = df[WgtVars].fillna(0.0).astype(int)
-    df[WgtVars] = df[WgtVars].fillna(0.0).astype(float)
+    df = pd.read_csv(csv_filename)
+    df = df[pd.notnull(df[id_csv_col])]
+    df[id_csv_col] = df[id_csv_col].astype(int)
+    print('CSV file has {} rows to merge'.format(len(df[id_csv_col])))
+    # NumVars = list(df.filter(regex=("Num.*")).columns)
+    # WgtVars = list(df.filter(regex=("Wgt.*")).columns)
+    # PctVars = list(df.filter(regex=("Pct.*")).columns)
+    # df[NumVars] = df[NumVars].fillna(0.0).astype(int)
+    # df[WgtVars] = df[WgtVars].fillna(0.0).astype(int)
+    # df[WgtVars] = df[WgtVars].fillna(0.0).astype(float)
 
     # move id column to first position
     columns = list(df.columns)
-    columns.remove(args.id_csv_col)
-    columns.insert(0,args.id_csv_col)
+    columns.remove(id_csv_col)
+    columns.insert(0,id_csv_col)
     df = df[columns]
     return df
 
