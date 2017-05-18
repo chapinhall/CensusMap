@@ -141,7 +141,7 @@ function numCalculations(stat, tracts)
     if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
       // Only add value if the wgt and count are more than zero
       if (tract.properties[meas_wgt] > 0 && tract.properties[meas] > 0){
-        row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / tract.properties[meas_wgt]) * tract.properties[meas]);
+        row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt']) * tract.properties[meas]);
       }
       // Only add value if the meas_aggregate_wgt is above zero
       if (row['meas_aggregate_wgt'] > 0){
@@ -167,7 +167,7 @@ function numCalculations(stat, tracts)
 
   row[stat] = Math.round(row[stat]);
 
-  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100) / row['intersectCount'],2).toString().concat("%");
+  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat("%");
 
 
 
