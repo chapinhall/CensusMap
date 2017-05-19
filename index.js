@@ -147,8 +147,6 @@ function numCalculations(stat, tracts)
       if (row['meas_aggregate_wgt'] > 0){
         row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
       }
-
-
     }
   };
   row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
@@ -163,14 +161,8 @@ function numCalculations(stat, tracts)
     row['reliability'] = 'green';
   }
 
-
-
   row[stat] = Math.round(row[stat]);
-
   row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat("%");
-
-
-
   return row;
 
 };
@@ -185,10 +177,8 @@ function addTable(table){
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
     var row = numCalculations(table.vars[i].name,tracts);
-
     addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
   }
-
 };
 
 function addHeader(table, val){
@@ -198,8 +188,6 @@ function addHeader(table, val){
   HeadCol.appendChild(content);
   tableHead.appendChild(HeadCol);
 }
-
-
 
 function addQuestion(content, tableName, questionId){
   var section = document.getElementById('results')
@@ -216,14 +204,11 @@ function addRow(tableName, row, stat, label, source, pctLabel)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
-  var trafficlight = document.createElement("img");
-  trafficlight.setAttribute("src", "greenlight.png");
-  trafficlight.setAttribute("height","25px");
-  trafficlight.setAttribute("width", "25px");
   table.appendChild(NewRow);
 
   addHover(NewRow,label,source, true);
-  addMeas(NewRow,row['reliability']);
+  // addMeas(NewRow,row['reliability']);
+  addReliability(NewRow, row['reliability']);
   addMeas(NewRow,row[stat].toLocaleString('en'));
   addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
 
@@ -253,6 +238,36 @@ function addHover(row,val,hover, labelBool)
   }
 };
 
+function addReliability(row,reliability)
+{
+  var NewCol = document.createElement("td");
+  row.appendChild(NewCol);
+
+  var green = document.createElement("img");
+  green.setAttribute("src", "greenlight.png");
+  green.setAttribute("height","25px");
+  green.setAttribute("width", "25px");
+
+  var yellow = document.createElement("img");
+  yellow.setAttribute("src", "yellowlight.png");
+  yellow.setAttribute("height","25px");
+  yellow.setAttribute("width", "25px");
+
+  var red = document.createElement("img");
+  red.setAttribute("src", "redlight.png");
+  red.setAttribute("height","25px");
+  red.setAttribute("width", "25px");
+
+  if (reliability === "green"){
+    NewCol.appendChild(green);
+  }
+  if (reliability === "yellow"){
+    NewCol.appendChild(yellow);
+  }
+  if (reliability === "red"){
+    NewCol.appendChild(red);
+  }
+};
 
 // Reset Tables
 function resetTables()
