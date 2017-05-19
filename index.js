@@ -185,8 +185,7 @@ function addTable(table){
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
     var row = numCalculations(table.vars[i].name,tracts);
-    console.log(table.vars[i].name);
-    console.log(row);
+
     addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
   }
 
@@ -217,44 +216,43 @@ function addRow(tableName, row, stat, label, source, pctLabel)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
-
-
-  var statName = document.createElement("tooltiptext")
-  statName.setAttribute("title", source);
-  $('<p>' + label + '</p>').appendTo(statName);
-
-  var NewCol1 = document.createElement("td");
-  NewCol1.setAttribute("id", "label")
-  var NewCol2 = document.createElement("td");
-  var NewCol3 = document.createElement("td");
-
-  var Text2 = document.createTextNode(row[stat].toLocaleString('en'));
-
-  var percentName = document.createElement("tooltiptext")
-  percentName.setAttribute("title", pctLabel);
-  var percentText = document.createTextNode(row['perc'].toLocaleString('en', {style: "percent"}));
-  $(percentText).appendTo(percentName);
-
-
-  var NewCol4 = document.createElement("td");
-  var Text4 = document.createTextNode(row['reliability']);
-
-
-
-
-  // $('<p>' + (row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"} + '</p>')).appendTo(percentName);
-  // var Text3 = document.createTextNode(row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"}));
-
+  var trafficlight = document.createElement("img");
+  trafficlight.setAttribute("src", "greenlight.png");
+  trafficlight.setAttribute("height","25px");
+  trafficlight.setAttribute("width", "25px");
   table.appendChild(NewRow);
-  NewCol1.appendChild(statName);
-  NewCol4.appendChild(Text4);
-  NewRow.appendChild(NewCol1);
-  NewRow.appendChild(NewCol4);
-  NewRow.appendChild(NewCol2);
-  NewRow.appendChild(NewCol3);
-  NewCol2.appendChild(Text2);
-  NewCol3.appendChild(percentName);
+
+  addHover(NewRow,label,source, true);
+  addMeas(NewRow,row['reliability']);
+  addMeas(NewRow,row[stat].toLocaleString('en'));
+  addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+
 };
+
+function addMeas(row,val)
+{
+  var NewCol = document.createElement("td");
+  var TextVal = document.createTextNode(val);
+  row.appendChild(NewCol);
+  NewCol.appendChild(TextVal);
+};
+
+function addHover(row,val,hover, labelBool)
+{
+
+  var NewCol = document.createElement("td");
+  var toolTip = document.createElement("tooltiptext")
+  toolTip.setAttribute("title", hover);
+  var TextVal = document.createTextNode(val);
+  $(TextVal).appendTo(toolTip);
+  row.appendChild(NewCol);
+  NewCol.appendChild(toolTip);
+  // Apply label id to set wider margin
+  if (labelBool){
+    NewCol.setAttribute("id", "label")
+  }
+};
+
 
 // Reset Tables
 function resetTables()
