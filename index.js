@@ -115,7 +115,7 @@ function numCalculations(stat, tracts)
   var row = {};
   var meas = stat.replace("n", "r");
   var meas_wgt = stat.replace("n", "w");
-  var meas_se = stat + "_se"
+  var meas_se = meas + "_se"
 
   // Iniitialize values
   row['name'] = stat;
