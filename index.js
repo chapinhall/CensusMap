@@ -65,15 +65,17 @@ document.getElementById("delete").onclick = function () {
 
 // Calculate Button Event Handler
 document.getElementById("calculate").onclick = function () {
-  determineIntersect(userShapes);
+  var valid = determineIntersect(userShapes);
   // Remove previous results before displaying new results
   resetTables();
   // Add tables
-  addTable(need);
-  addTable(enroll);
+  if (valid){
+    addTable(need);
+    addTable(enroll);
+    // Jump to results section
+    $('[href="#results"]').tab('show');
 
-  // Jump to results section
-  $('[href="#results"]').tab('show');
+  }
 };
 
 // Jump To Button Event Handler
@@ -94,6 +96,7 @@ $(document.body).on('click', '.dropdown-menu li button', function (e) {
 // Function to Determine which tracts intersect userShapes
 function determineIntersect(userShapes)
 {
+  try{
   for (var i = 0; i < userShapes.length; i++){
     var userShape = userShapes[i];
     for (var j = 0; j < tracts.features.length; j++){
@@ -105,8 +108,16 @@ function determineIntersect(userShapes)
         var intersectionArea = turf.area(intersection);
         tract.properties.overlap = intersectionArea / tractArea;
       }
+
+
     }
   }
+  return true
+}
+catch(err) {
+  alert("Invalid shape. Please try again");
+  return false
+}
 };
 
 // Function to aggregate statistics
