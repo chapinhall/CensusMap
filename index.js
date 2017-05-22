@@ -119,9 +119,8 @@ function intersect(userShape, geographies){
 
 }
 
-
 // Function to aggregate statistics
-function numCalculations(stat, geographies)
+function estimatesCalculations(stat, geographies)
 {
   var row = {};
   var meas = stat.replace("n", "r");
@@ -207,19 +206,58 @@ function addTable(table){
   for (var i = 0; i < table.vars.length; i++){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
-      var row = numCalculations(table.vars[i].name,tracts);
-      console.log(row);
-      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+      console.log(table.vars[i].specialFormat);
+      if (!table.vars[i].specialFormat){
+        var row = estimatesCalculations(table.vars[i].name,tracts);
+        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+      }
+      if (table.vars[i].specialFormat){
+        var row = simpleWeightCalculation(table.vars[i].name,tracts);
+        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source);
+      }
+
     }
+
     // process commArea group level variables
     if (table.vars[i].unit === 'commArea'){
-      var row = numCalculations(table.vars[i].name,commAreas);
-      console.log(row);
+      var row = estimatesCalculations(table.vars[i].name,commAreas);
       addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
     }
 
   }
 };
+
+function simpleWeightCalculation(stat, geographies){
+  // Iniitialize values
+  var row = {};
+  row['name'] = stat;
+  row[stat] = 0;
+  row['intersectCount'] = 0;
+
+
+  // Caclulate total weighted estimate
+  for (var i = 0; i < geographies.features.length; i++){
+    var geography = geographies.features[i];
+    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
+      row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
+      row['intersectCount'] = row['intersectCount'] + 1;
+    }
+  }
+  row['simpleAvg'] = row[stat] / row['intersectCount'];
+  return row;
+}
+
+function displaySimpleWeight(tableName, row, label, source){
+  var table = document.getElementById(tableName);
+  var NewRow = document.createElement("tr");
+  table.appendChild(NewRow);
+
+  addHover(NewRow,label,source, true);
+  addMeas(NewRow,"");
+  addMeas(NewRow,"");
+  addMeas(NewRow, row['simpleAvg'].toLocaleString('en'));
+
+}
 
 function addHeader(table, val){
   var tableHead = document.getElementById(table.name)
