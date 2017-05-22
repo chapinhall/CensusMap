@@ -96,12 +96,17 @@ $(document.body).on('click', '.dropdown-menu li button', function (e) {
 // Function to Determine which tracts intersect userShapes
 function determineIntersect(userShapes)
 {
-  for (var i = 0; i < userShapes.length; i++){
-    var userShape = userShapes[i];
-    intersect(userShape,tracts)
+  try{
+    for (var i = 0; i < userShapes.length; i++){
+      var userShape = userShapes[i];
+      intersect(userShape,tracts)
+    }
+    return true
   }
-  return true
-
+  catch(err) {
+    alert("Invalid shape. Please try again");
+    return false
+  }
 
 };
 
