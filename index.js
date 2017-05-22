@@ -72,6 +72,7 @@ document.getElementById("calculate").onclick = function () {
   if (valid){
     addTable(need);
     addTable(enroll);
+    addTable(care);
     // Jump to results section
     $('[href="#results"]').tab('show');
 
@@ -85,7 +86,6 @@ $(document.body).on('click', '.dropdown-menu li button', function (e) {
     var commArea = commAreas.features[i];
     if (commArea.properties.community.toLowerCase() === selected.toLowerCase()){
       var centroid = turf.centroid(commArea);
-      console.log(centroid.geometry.coordinates)
       var coordinates = centroid.geometry.coordinates
       var leafletCoordinates = [coordinates[1],coordinates[0]];
       map.setView(leafletCoordinates,13);
@@ -96,32 +96,32 @@ $(document.body).on('click', '.dropdown-menu li button', function (e) {
 // Function to Determine which tracts intersect userShapes
 function determineIntersect(userShapes)
 {
-  try{
   for (var i = 0; i < userShapes.length; i++){
     var userShape = userShapes[i];
-    for (var j = 0; j < tracts.features.length; j++){
-      var tract = tracts.features[j];
-      var intersection = turf.intersect(userShape, tract['geometry']);
-      if (intersection != null){
-        tract.properties.intersection = true;
-        var tractArea = turf.area(tract);
-        var intersectionArea = turf.area(intersection);
-        tract.properties.overlap = intersectionArea / tractArea;
-      }
-
-
-    }
+    intersect(userShape,tracts)
   }
   return true
-}
-catch(err) {
-  alert("Invalid shape. Please try again");
-  return false
-}
+
+
 };
 
+function intersect(userShape, geographies){
+  for (var j = 0; j < geographies.features.length; j++){
+    var geography = geographies.features[j];
+    var intersection = turf.intersect(userShape, geography['geometry']);
+    if (intersection != null){
+      geography.properties.intersection = true;
+      var geographyArea = turf.area(geography);
+      var intersectionArea = turf.area(intersection);
+      geography.properties.overlap = intersectionArea / geographyArea;
+    }
+  }
+
+}
+
+
 // Function to aggregate statistics
-function numCalculations(stat, tracts)
+function numCalculations(stat, geographies)
 {
   var row = {};
   var meas = stat.replace("n", "r");
@@ -143,27 +143,27 @@ function numCalculations(stat, tracts)
   row['meas_aggregate_var_num'] = 0;
 
   // Caclulate total weight for selection
-  for (var i = 0; i < tracts.features.length; i++){
-    var tract = tracts.features[i];
-    if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
-      row['meas_aggregate_wgt'] = row['meas_aggregate_wgt'] + (Number(tract.properties[meas_wgt]) * tract.properties.overlap);
-      row[stat] = (Number(tract.properties[stat]) * tract.properties.overlap) + row[stat];
+  for (var i = 0; i < geographies.features.length; i++){
+    var geography = geographies.features[i];
+    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
+      row['meas_aggregate_wgt'] = row['meas_aggregate_wgt'] + (Number(geography.properties[meas_wgt]) * geography.properties.overlap);
+      row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
       row['intersectCount'] = row['intersectCount'] + 1;
     }
   };
 
   //Calculate mean and variance for measure
-  for (var i = 0; i < tracts.features.length; i++){
-    var tract = tracts.features[i];
-    if (tract.properties.intersection && tract.properties.hasOwnProperty(stat)){
+  for (var i = 0; i < geographies.features.length; i++){
+    var geography = geographies.features[i];
+    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
       // Only add value if the wgt and count are more than zero
-      if (tract.properties[meas_wgt] > 0 && tract.properties[meas] > 0){
-        row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt']) * tract.properties[meas]);
+      if (geography.properties[meas_wgt] > 0 && geography.properties[meas] > 0){
+        row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt']) * geography.properties[meas]);
       }
       // Only add value if the meas_aggregate_wgt is above zero
       if (row['meas_aggregate_wgt'] > 0){
-        row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
-        row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se_num],2));
+        row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se],2));
+        row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se_num],2));
 
       }
     }
@@ -205,9 +205,19 @@ function addTable(table){
 
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
-    var row = numCalculations(table.vars[i].name,tracts);
-    console.log(row);
-    addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+    // process tract level variables
+    if (table.vars[i].unit === 'tract'){
+      var row = numCalculations(table.vars[i].name,tracts);
+      console.log(row);
+      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+    }
+    // process commArea group level variables
+    if (table.vars[i].unit === 'commArea'){
+      var row = numCalculations(table.vars[i].name,commAreas);
+      console.log(row);
+      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+    }
+
   }
 };
 
@@ -237,20 +247,14 @@ function addRow(tableName, row, stat, label, source, pctLabel)
   table.appendChild(NewRow);
 
   addHover(NewRow,label,source, true);
-  // addMeas(NewRow,row['reliability']);
   addReliability(NewRow, row['reliability']);
-  // addMeas(NewRow,row[stat].toLocaleString('en'));
   addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
-  // addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
   if (row['rate_lb'] >= 0){
     addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
   }
   if (row['rate_lb'] < 0 ){
     addHover(NewRow,'0%'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
   }
-
-  // addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
-
 
 };
 
@@ -312,8 +316,8 @@ function addReliability(row,reliability)
 // Reset Tables
 function resetTables()
 {
-  var table_names = ["enroll", "need"];
-  var question_names = ["enrollQuestion", "needQuestion"];
+  var table_names = ["enroll", "need", "care"];
+  var question_names = ["enrollQuestion", "needQuestion", "careQuestion"];
   for (var i = 0; i < table_names.length; i++){
     var results = document.getElementById(table_names[i]);
     var question = document.getElementById(question_names[i]);
