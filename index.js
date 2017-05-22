@@ -126,15 +126,21 @@ function numCalculations(stat, tracts)
   var row = {};
   var meas = stat.replace("n", "r");
   var meas_wgt = stat.replace("n", "w");
-  var meas_se = meas + "_se"
+  var meas_se = meas + "_se";
+  var meas_se_num = stat + "_se";
 
   // Iniitialize values
   row['name'] = stat;
   row['meas_aggregate_wgt'] = 0;
   row['meas_aggregate_mean'] = 0;
   row['meas_aggregate_var'] = 0;
-  row[stat] = 0;
   row['intersectCount'] = 0;
+
+  // Iniitialize values for estimate numbers
+  var meas_se_num = stat + "_se";
+  row['meas_aggregate_wgt_num'] = 0;
+  row[stat] = 0;
+  row['meas_aggregate_var_num'] = 0;
 
   // Caclulate total weight for selection
   for (var i = 0; i < tracts.features.length; i++){
@@ -157,10 +163,22 @@ function numCalculations(stat, tracts)
       // Only add value if the meas_aggregate_wgt is above zero
       if (row['meas_aggregate_wgt'] > 0){
         row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se],2));
+        row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow((tract.properties.overlap * tract.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(tract.properties[meas_se_num],2));
+
       }
     }
   };
   row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
+  row['meas_aggregate_se_num'] = Math.sqrt(row['meas_aggregate_var_num']);
+
+  // 90% Confidence Intervals
+  row['stat_lb'] = Math.round(row[stat] - (1.645 * row['meas_aggregate_se_num']));
+  row['stat_ub'] = Math.round(row[stat] + (1.645 * row['meas_aggregate_se_num']));
+
+  row['rate_lb'] = (row['meas_aggregate_mean'] - (1.645 * row['meas_aggregate_se']))
+  row['rate_ub'] = (row['meas_aggregate_mean'] + (1.645 * row['meas_aggregate_se']))
+
+
   row['meas_aggregate_cv'] = row['meas_aggregate_se'] / row['meas_aggregate_mean'];
   if (row['meas_aggregate_cv'] > 0.4){
     row['reliability'] = 'red';
@@ -188,6 +206,7 @@ function addTable(table){
   addQuestion(table.qText, table.name, table.qId);
   for (var i = 0; i < table.vars.length; i++){
     var row = numCalculations(table.vars[i].name,tracts);
+    console.log(row);
     addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
   }
 };
@@ -220,8 +239,13 @@ function addRow(tableName, row, stat, label, source, pctLabel)
   addHover(NewRow,label,source, true);
   // addMeas(NewRow,row['reliability']);
   addReliability(NewRow, row['reliability']);
-  addMeas(NewRow,row[stat].toLocaleString('en'));
-  addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+  // addMeas(NewRow,row[stat].toLocaleString('en'));
+  addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub']))
+  // addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+  addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+
+  // addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+
 
 };
 
