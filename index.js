@@ -240,7 +240,7 @@ function addRow(tableName, row, stat, label, source, pctLabel)
   // addMeas(NewRow,row['reliability']);
   addReliability(NewRow, row['reliability']);
   // addMeas(NewRow,row[stat].toLocaleString('en'));
-  addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub']))
+  addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
   // addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
   if (row['rate_lb'] >= 0){
     addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
