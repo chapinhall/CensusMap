@@ -218,7 +218,7 @@ function addTable(table){
       }
       if (table.vars[i].specialFormat){
         var row = simpleWeightCalculation(table.vars[i].name,tracts);
-        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source);
+        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
       }
 
     }
@@ -252,15 +252,16 @@ function simpleWeightCalculation(stat, geographies){
   return row;
 }
 
-function displaySimpleWeight(tableName, row, label, source){
+function displaySimpleWeight(tableName, row, label, source, pctLabel){
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
   table.appendChild(NewRow);
 
   addHover(NewRow,label,source, true);
   addMeas(NewRow,"");
+  addHover(NewRow,row['simpleAvg'].toLocaleString('en'),pctLabel, false);
   addMeas(NewRow,"");
-  addMeas(NewRow, row['simpleAvg'].toLocaleString('en'));
+
 
 }
 

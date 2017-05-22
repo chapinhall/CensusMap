@@ -26,7 +26,7 @@ source: 'American Community Survey (ACS)', unit: 'tract', pctLabel: 'This is the
 var nAdultsGe25_LtHsEd = {name: 'nAdultsGe25_LtHsEd', label: 'Adults aged 25 or more, with less than a high school education',
 source: 'American Community Survey (ACS)', unit: 'tract', pctLabel: 'This is the number of adults aged 25 or more who have not earned at least a high school diploma (or equivalent), as a percentage of all adults aged 25 or more', specialFormat: false}
 
-var violCrimes_per1k = {name: 'violCrimes_per1k', label: 'This is the ratio between the number of crimes, and the number of residents (in thousands)', unit: 'tract',
+var violCrimes_per1k = {name: 'violCrimes_per1k', label: "Violent Crimes per 1,000 residents", pctLabel: 'This is the ratio between the number of crimes, and the number of residents (in thousands)', unit: 'tract',
 source: '	City of Chicago Data Portal', specialFormat: true}
 
 // Tables
