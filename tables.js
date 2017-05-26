@@ -29,7 +29,11 @@ source: 'American Community Survey (ACS)', unit: 'tract', pctLabel: 'This is the
 var violCrimes_per1k = {name: 'violCrimes_per1k', label: "Violent Crimes per 1,000 residents", pctLabel: 'This is the ratio between the number of crimes, and the number of residents (in thousands)', unit: 'tract',
 source: '	City of Chicago Data Portal', specialFormat: true}
 
+var nParcc_below_either = {name: 'nParcc_below_either', label: "Chicago Public School students in 3rd grade, who are below proficiency in the PARCC test for either math or reading", pctLabel: 'This is the number of 3rd grade students in the Chicago Public Schools who are below proficiency in the PARCC test for either math or reading, as a percentage of all CPS 3rd graders', unit: 'tract',
+source: '	Chicago Public Schools Data',  specialFormat: false}
+
 // Tables
-var need = {name: 'need', vars: [violCrimes_per1k, nBirths_Teen, nHhs_Rent, nRenters_Ge30Pct, nKidsLt6_GpCare, nAdultsGe25_LtHsEd], qId: "needQuestion", qText: "What needs are in the community?"}
+
+var need = {name: 'need', vars: [violCrimes_per1k,nParcc_below_either, nBirths_Teen, nHhs_Rent, nRenters_Ge30Pct, nKidsLt6_GpCare, nAdultsGe25_LtHsEd], qId: "needQuestion", qText: "What needs are in the community?"}
 var enroll = {name: 'enroll', vars: [nFamLtPov_Ge3OwnKids, nHhSizeCars_Ge3PerHh_0Cars], qId: "enrollQuestion", qText: "How many families are likely to enroll in community-based programs / school based programs?"}
 var care = {name: 'care', vars: [nChLt6_1Par_Lf, nChLt6_2Par_Lf], qId: "careQuestion", qText: "How many children need full time care?"}

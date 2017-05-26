@@ -142,7 +142,6 @@ function estimatesCalculations(stat, geographies)
 
   // Iniitialize values for estimate numbers
   var meas_se_num = stat + "_se";
-  row['meas_aggregate_wgt_num'] = 0;
   row[stat] = 0;
   row['meas_aggregate_var_num'] = 0;
 
@@ -211,13 +210,13 @@ function addTable(table){
   for (var i = 0; i < table.vars.length; i++){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
-      console.log(table.vars[i].specialFormat);
       if (!table.vars[i].specialFormat){
         var row = estimatesCalculations(table.vars[i].name,tracts);
         addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
       }
       if (table.vars[i].specialFormat){
         var row = simpleWeightCalculation(table.vars[i].name,tracts);
+        console.log(row);
         displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
       }
 
@@ -237,6 +236,8 @@ function simpleWeightCalculation(stat, geographies){
   var row = {};
   row['name'] = stat;
   row[stat] = 0;
+  row['se_total'] = 0;
+  var meas_se_num = stat + "_se";
   row['intersectCount'] = 0;
 
 
@@ -245,10 +246,17 @@ function simpleWeightCalculation(stat, geographies){
     var geography = geographies.features[i];
     if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
       row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
+      row['se_total'] = (Number(geography.properties[meas_se_num]) * geography.properties.overlap) + row['se_total'];
       row['intersectCount'] = row['intersectCount'] + 1;
     }
   }
+
   row['simpleAvg'] = row[stat] / row['intersectCount'];
+  row['seAvg'] = row['se_total'] / row['intersectCount'];
+
+  // 90% Confidence Intervals
+  row['stat_lb'] = row['simpleAvg'] - (1.645 * row['seAvg']);
+  row['stat_ub'] = row['simpleAvg'] + (1.645 * row['seAvg']);
   return row;
 }
 
@@ -259,8 +267,9 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
 
   addHover(NewRow,label,source, true);
   addMeas(NewRow,"");
-  addHover(NewRow,row['simpleAvg'].toLocaleString('en'),pctLabel, false);
+  addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
   addMeas(NewRow,"");
+
 
 
 }
