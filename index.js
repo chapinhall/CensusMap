@@ -183,21 +183,27 @@ function estimatesCalculations(stat, geographies)
 
 
   row['meas_aggregate_cv'] = row['meas_aggregate_se'] / row['meas_aggregate_mean'];
-  if (row['meas_aggregate_cv'] > 0.4){
-    row['reliability'] = 'red';
-  }
-  if (row['meas_aggregate_cv'] <= 0.4 && row['meas_aggregate_cv'] > 0.12) {
-    row['reliability'] = 'yellow';
-  }
-  if (row['meas_aggregate_cv'] <= 0.12) {
-    row['reliability'] = 'green';
-  }
+  row['reliability'] = calcReliability(row['meas_aggregate_cv']);
 
   row[stat] = Math.round(row[stat]);
   row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat("%");
   return row;
 
 };
+
+function calcReliability(cv){
+  if (cv > 0.4){
+    var reliability = 'red';
+  }
+  if (cv <= 0.4 && cv > 0.12) {
+    var reliability = 'yellow';
+  }
+  if (cv <= 0.12) {
+    var reliability = 'green';
+  }
+  return reliability;
+
+}
 
 function addTable(table){
   // Add Header
@@ -257,6 +263,11 @@ function simpleWeightCalculation(stat, geographies){
   // 90% Confidence Intervals
   row['stat_lb'] = row['simpleAvg'] - (1.645 * row['seAvg']);
   row['stat_ub'] = row['simpleAvg'] + (1.645 * row['seAvg']);
+
+  row['meas_aggregate_cv'] = row['seAvg'] / row['simpleAvg'];
+  row['reliability'] = calcReliability(row['meas_aggregate_cv']);
+
+
   return row;
 }
 
@@ -266,11 +277,9 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
   table.appendChild(NewRow);
 
   addHover(NewRow,label,source, true);
-  addMeas(NewRow,"");
+  addReliability(NewRow, row['reliability']);
   addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
   addMeas(NewRow,"");
-
-
 
 }
 
