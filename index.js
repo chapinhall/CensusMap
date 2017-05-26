@@ -60,6 +60,9 @@ document.getElementById("delete").onclick = function () {
   for (var i = 0; i < tracts.features.length; i++){
     tracts.features[i].properties.intersection = false;
   };
+  for (var i = 0; i < commAreas.features.length; i++){
+    commAreas.features[i].properties.intersection = false;
+  };
   resetTables();
 };
 
@@ -70,6 +73,7 @@ document.getElementById("calculate").onclick = function () {
   resetTables();
   // Add tables
   if (valid){
+    addTable(eligible);
     addTable(need);
     addTable(enroll);
     addTable(care);
@@ -100,6 +104,10 @@ function determineIntersect(userShapes)
     for (var i = 0; i < userShapes.length; i++){
       var userShape = userShapes[i];
       intersect(userShape,tracts)
+    }
+    for (var i = 0; i < userShapes.length; i++){
+      var userShape = userShapes[i];
+      intersect(userShape,commAreas)
     }
     return true
   }
@@ -191,52 +199,6 @@ function estimatesCalculations(stat, geographies)
 
 };
 
-function calcReliability(cv){
-  if (cv > 0.4){
-    var reliability = 'red';
-  }
-  if (cv <= 0.4 && cv > 0.12) {
-    var reliability = 'yellow';
-  }
-  if (cv <= 0.12) {
-    var reliability = 'green';
-  }
-  return reliability;
-
-}
-
-function addTable(table){
-  // Add Header
-  addHeader(table,"Measure");
-  addHeader(table,"Reliability Indicator");
-  addHeader(table,"Estimated Number");
-  addHeader(table,"%");
-
-  addQuestion(table.qText, table.name, table.qId);
-  for (var i = 0; i < table.vars.length; i++){
-    // process tract level variables
-    if (table.vars[i].unit === 'tract'){
-      if (!table.vars[i].specialFormat){
-        var row = estimatesCalculations(table.vars[i].name,tracts);
-        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
-      }
-      if (table.vars[i].specialFormat){
-        var row = simpleWeightCalculation(table.vars[i].name,tracts);
-        console.log(row);
-        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
-      }
-
-    }
-
-    // process commArea group level variables
-    if (table.vars[i].unit === 'commArea'){
-      var row = estimatesCalculations(table.vars[i].name,commAreas);
-      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
-    }
-
-  }
-};
-
 function simpleWeightCalculation(stat, geographies){
   // Iniitialize values
   var row = {};
@@ -271,6 +233,68 @@ function simpleWeightCalculation(stat, geographies){
   return row;
 }
 
+function sumOnly(stat, geographies){
+  // Iniitialize values
+  var row = {};
+  row['name'] = stat;
+  row[stat] = 0;
+
+
+  // Caclulate total sum estimate
+  for (var i = 0; i < geographies.features.length; i++){
+    var geography = geographies.features[i];
+    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
+      row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
+    }
+  }
+  row['sum'] = Math.round(row[stat]);
+  return row;
+}
+
+function calcReliability(cv){
+  if (cv > 0.4){
+    var reliability = 'red';
+  }
+  if (cv <= 0.4 && cv > 0.12) {
+    var reliability = 'yellow';
+  }
+  if (cv <= 0.12) {
+    var reliability = 'green';
+  }
+  return reliability;
+
+}
+
+function addTable(table){
+  // Add Header
+  addHeader(table,"Measure");
+  addHeader(table,"Reliability Indicator");
+  addHeader(table,"Estimated Number");
+  addHeader(table,"%");
+
+  addQuestion(table.qText, table.name, table.qId);
+  for (var i = 0; i < table.vars.length; i++){
+    // process tract level variables
+    if (table.vars[i].unit === 'tract'){
+      if (!table.vars[i].rateOnly){
+        var row = estimatesCalculations(table.vars[i].name,tracts);
+        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+      }
+      if (table.vars[i].rateOnly){
+        var row = simpleWeightCalculation(table.vars[i].name,tracts);
+        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+      }
+    }
+
+    // process commArea group level variables. These are sum only.
+    if (table.vars[i].unit === 'communityArea'){
+      var row = sumOnly(table.vars[i].name,commAreas);
+      displaySumOnly(table.name, row,table.vars[i].label, table.vars[i].source);
+    }
+
+  }
+};
+
 function displaySimpleWeight(tableName, row, label, source, pctLabel){
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
@@ -279,8 +303,18 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
   addHover(NewRow,label,source, true);
   addReliability(NewRow, row['reliability']);
   addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
-  addMeas(NewRow,"");
+  addMeas(NewRow,"NA");
+}
 
+function displaySumOnly(tableName, row, label, source){
+  var table = document.getElementById(tableName);
+  var NewRow = document.createElement("tr");
+  table.appendChild(NewRow);
+
+  addHover(NewRow,label,source, true);
+  addMeas(NewRow,"NA");
+  addMeas(NewRow, row['sum'].toLocaleString('en'));
+  addMeas(NewRow,"NA");
 }
 
 function addHeader(table, val){
@@ -378,8 +412,8 @@ function addReliability(row,reliability)
 // Reset Tables
 function resetTables()
 {
-  var table_names = ["enroll", "need", "care"];
-  var question_names = ["enrollQuestion", "needQuestion", "careQuestion"];
+  var table_names = ["eligible","enroll", "need", "care"];
+  var question_names = ["eligibleQuestion","enrollQuestion", "needQuestion", "careQuestion"];
   for (var i = 0; i < table_names.length; i++){
     var results = document.getElementById(table_names[i]);
     var question = document.getElementById(question_names[i]);
