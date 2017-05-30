@@ -303,7 +303,7 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
   addHover(NewRow,label,source, true);
   addReliability(NewRow, row['reliability']);
   addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
-  addMeas(NewRow,"NA");
+  addMeas(NewRow,"-");
 }
 
 function displaySumOnly(tableName, row, label, source){
@@ -312,9 +312,9 @@ function displaySumOnly(tableName, row, label, source){
   table.appendChild(NewRow);
 
   addHover(NewRow,label,source, true);
-  addMeas(NewRow,"NA");
+  addMeas(NewRow,"-");
   addMeas(NewRow, row['sum'].toLocaleString('en'));
-  addMeas(NewRow,"NA");
+  addMeas(NewRow,"-");
 }
 
 function addHeader(table, val){
