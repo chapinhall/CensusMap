@@ -2,24 +2,28 @@
 
 body {
   font-size: 16px;
-  background-color: rgb(215,234,244);
+  background-color: #FFFFFF;
   font-weight: 300;
 }
 
 a {
-  color: #cc6600;
+  /*color: #cc6600;*/
+  color: #FF0000;
 }
 
 
-h1, h2{
-  font-family: 'Helvetica', serif;
-  color: #809DB9;
-}
-
-h3, h4, h5, .h3, .h4, .h5 {
+h1,h2,h3 {
   font-family: 'Helvetica', serif;
   font-style: italic;
   color: #809DB9;
+  font-weight: bold;
+}
+
+h3 {
+  font-family: 'Helvetica', serif;
+  font-style: italic;
+  color: #809DB9;
+  font-weight: bold;
 }
 
 th, td {
