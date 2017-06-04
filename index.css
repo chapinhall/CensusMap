@@ -1,5 +1,10 @@
 /* custom styles */
 
+
+.main-header {
+  text-align: left;
+   /*background-color: rgb(215,234,244);*/
+}
 body {
   font-size: 16px;
   background-color: #FFFFFF;
@@ -7,8 +12,7 @@ body {
 }
 
 a {
-  /*color: #cc6600;*/
-  color: #FF0000;
+  color: #cc6600;;
 }
 
 
@@ -64,23 +68,24 @@ th, td {
   padding-right: 10px;
 }
 #map {
-  padding: 0px;
-  height: 100%;
+    position: fixed;
+    width: 50%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 10;
 }
+
 
 #map-nav {
   display: inline-block;
   margin-left: 15px;
 }
 
-#menu { position: absolute; top: 5px; right: 10px; width: 275px; height:60px; background: transparent; z-index:500;}
-#menu a {
-  margin: 15px 10px 0 0;
-  float: right;
-  vertical-align: baseline;
-  padding: 4px;
-  text-align: center;
-  line-height: normal;
+
+
+#menu { position: absolute; top: 5px; right: 20px; width: 275px; height:60px; background: transparent; z-index:500;}*/
+#menu {
 }
 
   .scrollable-menu {

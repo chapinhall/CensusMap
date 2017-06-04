@@ -425,3 +425,9 @@ function resetTables()
     }
   }
 };
+
+// $(window).resize(function() {
+//     $('#map').height($(window).height() - 46);
+// });
+//
+// $(window).trigger('resize')
