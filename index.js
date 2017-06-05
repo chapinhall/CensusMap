@@ -195,13 +195,8 @@ function estimatesCalculations(stat, geographies, standardErrorFlag)
     row['reliability'] = calcReliability(row['meas_aggregate_cv']);
   }
 
-  // if (!standardErrorFlag){
-  //   row['stat']
-  //
-  // }
-
   row[stat] = Math.round(row[stat]);
-  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat(" %");
+  row['perc'] = row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"})
   return row;
 
 };
@@ -275,10 +270,7 @@ function addTable(table){
 
     if (table.vars[i].unit === 'communityArea'){
       var row = estimatesCalculations(table.vars[i].name,commAreas,false);
-      console.log(row);
       addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, false);
-      // var row = sumOnly(table.vars[i].name,commAreas);
-      // displaySumOnly(table.name, row,table.vars[i].label, table.vars[i].source);
     }
 
   }
@@ -292,17 +284,6 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
   addHover(NewRow,label,source, true);
   addReliability(NewRow, row['reliability']);
   addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
-  addMeas(NewRow,"-");
-}
-
-function displaySumOnly(tableName, row, label, source){
-  var table = document.getElementById(tableName);
-  var NewRow = document.createElement("tr");
-  table.appendChild(NewRow);
-
-  addHover(NewRow,label,source, true);
-  addMeas(NewRow,"-");
-  addMeas(NewRow, row['sum'].toLocaleString('en'));
   addMeas(NewRow,"-");
 }
 
@@ -398,8 +379,6 @@ function addReliability(row,reliability)
   grey.setAttribute("height","25px");
   grey.setAttribute("width", "25px");
 
-
-
   if (reliability === "green"){
     NewCol.appendChild(green);
   }
@@ -430,9 +409,3 @@ function resetTables()
     }
   }
 };
-
-// $(window).resize(function() {
-//     $('#map').height($(window).height() - 46);
-// });
-//
-// $(window).trigger('resize')
