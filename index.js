@@ -133,7 +133,7 @@ function intersect(userShape, geographies){
 }
 
 // Function to aggregate statistics
-function estimatesCalculations(stat, geographies)
+function estimatesCalculations(stat, geographies, standardErrorFlag)
 {
   var row = {};
   var meas = stat.replace("n", "r");
@@ -172,32 +172,53 @@ function estimatesCalculations(stat, geographies)
         row['meas_aggregate_mean'] = row['meas_aggregate_mean'] + Number(((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt']) * geography.properties[meas]);
       }
       // Only add value if the meas_aggregate_wgt is above zero
-      if (row['meas_aggregate_wgt'] > 0){
+      if (row['meas_aggregate_wgt'] > 0 && standardErrorFlag){
         row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se],2));
         row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se_num],2));
 
       }
     }
   };
-  row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
-  row['meas_aggregate_se_num'] = Math.sqrt(row['meas_aggregate_var_num']);
+  if (standardErrorFlag){
+    row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
+    row['meas_aggregate_se_num'] = Math.sqrt(row['meas_aggregate_var_num']);
 
-  // 90% Confidence Intervals
-  row['stat_lb'] = Math.round(row[stat] - (1.645 * row['meas_aggregate_se_num']));
-  row['stat_ub'] = Math.round(row[stat] + (1.645 * row['meas_aggregate_se_num']));
+    // 90% Confidence Intervals
+    row['stat_lb'] = Math.round(row[stat] - (1.645 * row['meas_aggregate_se_num']));
+    row['stat_ub'] = Math.round(row[stat] + (1.645 * row['meas_aggregate_se_num']));
 
-  row['rate_lb'] = (row['meas_aggregate_mean'] - (1.645 * row['meas_aggregate_se']))
-  row['rate_ub'] = (row['meas_aggregate_mean'] + (1.645 * row['meas_aggregate_se']))
+    row['rate_lb'] = (row['meas_aggregate_mean'] - (1.645 * row['meas_aggregate_se']))
+    row['rate_ub'] = (row['meas_aggregate_mean'] + (1.645 * row['meas_aggregate_se']))
 
 
-  row['meas_aggregate_cv'] = row['meas_aggregate_se'] / row['meas_aggregate_mean'];
-  row['reliability'] = calcReliability(row['meas_aggregate_cv']);
+    row['meas_aggregate_cv'] = row['meas_aggregate_se'] / row['meas_aggregate_mean'];
+    row['reliability'] = calcReliability(row['meas_aggregate_cv']);
+  }
+
+  // if (!standardErrorFlag){
+  //   row['stat']
+  //
+  // }
 
   row[stat] = Math.round(row[stat]);
-  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat("%");
+  row['perc'] = Math.round((row['meas_aggregate_mean'] * 100),2).toString().concat(" %");
   return row;
 
 };
+
+function calcReliability(cv){
+  if (cv > 0.4){
+    var reliability = 'red';
+  }
+  if (cv <= 0.4 && cv > 0.12) {
+    var reliability = 'yellow';
+  }
+  if (cv <= 0.12) {
+    var reliability = 'green';
+  }
+  return reliability;
+
+}
 
 function simpleWeightCalculation(stat, geographies){
   // Iniitialize values
@@ -228,41 +249,7 @@ function simpleWeightCalculation(stat, geographies){
 
   row['meas_aggregate_cv'] = row['seAvg'] / row['simpleAvg'];
   row['reliability'] = calcReliability(row['meas_aggregate_cv']);
-
-
   return row;
-}
-
-function sumOnly(stat, geographies){
-  // Iniitialize values
-  var row = {};
-  row['name'] = stat;
-  row[stat] = 0;
-
-
-  // Caclulate total sum estimate
-  for (var i = 0; i < geographies.features.length; i++){
-    var geography = geographies.features[i];
-    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
-      row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
-    }
-  }
-  row['sum'] = Math.round(row[stat]);
-  return row;
-}
-
-function calcReliability(cv){
-  if (cv > 0.4){
-    var reliability = 'red';
-  }
-  if (cv <= 0.4 && cv > 0.12) {
-    var reliability = 'yellow';
-  }
-  if (cv <= 0.12) {
-    var reliability = 'green';
-  }
-  return reliability;
-
 }
 
 function addTable(table){
@@ -277,19 +264,21 @@ function addTable(table){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
       if (!table.vars[i].rateOnly){
-        var row = estimatesCalculations(table.vars[i].name,tracts);
-        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+        var row = estimatesCalculations(table.vars[i].name,tracts, true);
+        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, true);
       }
       if (table.vars[i].rateOnly){
         var row = simpleWeightCalculation(table.vars[i].name,tracts);
-        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel);
+        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, true);
       }
     }
 
-    // process commArea group level variables. These are sum only.
     if (table.vars[i].unit === 'communityArea'){
-      var row = sumOnly(table.vars[i].name,commAreas);
-      displaySumOnly(table.name, row,table.vars[i].label, table.vars[i].source);
+      var row = estimatesCalculations(table.vars[i].name,commAreas,false);
+      console.log(row);
+      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, false);
+      // var row = sumOnly(table.vars[i].name,commAreas);
+      // displaySumOnly(table.name, row,table.vars[i].label, table.vars[i].source);
     }
 
   }
@@ -336,21 +325,27 @@ function addQuestion(content, tableName, questionId){
 }
 
 // Function to add row to results table
-function addRow(tableName, row, stat, label, source, pctLabel)
+function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag)
 {
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
   table.appendChild(NewRow);
-
   addHover(NewRow,label,source, true);
-  addReliability(NewRow, row['reliability']);
-  addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
-  if (row['rate_lb'] >= 0){
-    addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+
+  if (standardErrorFlag){
+    addReliability(NewRow, row['reliability']);
+    addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
+    if (row['rate_lb'] >= 0){
+      addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+    }
+    if (row['rate_lb'] < 0 ){
+      addHover(NewRow,'0 %'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+    }
   }
-  if (row['rate_lb'] < 0 ){
-    addHover(NewRow,'0%'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
-  }
+  if (!standardErrorFlag){
+    addMeas(NewRow,"-");
+    addMeas(NewRow, row[stat].toLocaleString('en'))
+    addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)}
 
 };
 
