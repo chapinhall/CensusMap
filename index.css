@@ -39,7 +39,7 @@ th, td {
   padding-right: 12px;
   text-align: left;
   color: #black;
-  border: 3px solid black;
+  border: 1px solid black;
   background-color: #d6d6d6;
   text-align:center;
   }
@@ -50,7 +50,6 @@ th, td {
   }
 
   table {
-    width: 450 px;
     table-layout: : fixed;
   }
 
