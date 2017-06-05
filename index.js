@@ -343,7 +343,7 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
     }
   }
   if (!standardErrorFlag){
-    addMeas(NewRow,"-");
+    addReliability(NewRow, 'grey');
     addMeas(NewRow, row[stat].toLocaleString('en'))
     addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)}
 
@@ -393,6 +393,13 @@ function addReliability(row,reliability)
   red.setAttribute("height","25px");
   red.setAttribute("width", "25px");
 
+  var grey = document.createElement("img");
+  grey.setAttribute("src", "greylight.png");
+  grey.setAttribute("height","25px");
+  grey.setAttribute("width", "25px");
+
+
+
   if (reliability === "green"){
     NewCol.appendChild(green);
   }
@@ -401,6 +408,9 @@ function addReliability(row,reliability)
   }
   if (reliability === "red"){
     NewCol.appendChild(red);
+  }
+  if (reliability === 'grey'){
+    NewCol.appendChild(grey);
   }
 };
 
