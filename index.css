@@ -3,7 +3,14 @@
 
 .main-header {
   text-align: left;
-   /*background-color: rgb(215,234,244);*/
+  padding:0;
+  margin:0;
+}
+
+.logo{
+  padding: 0;
+  margin:0;
+  width:32%
 }
 body {
   font-size: 16px;
