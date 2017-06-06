@@ -235,12 +235,12 @@ function simpleWeightCalculation(stat, geographies){
     }
   }
 
-  row['simpleAvg'] = row[stat] / row['intersectCount'];
+  row['simpleAvg'] = Math.round((row[stat] / row['intersectCount']));
   row['seAvg'] = row['se_total'] / row['intersectCount'];
 
   // 90% Confidence Intervals
-  row['stat_lb'] = row['simpleAvg'] - (1.645 * row['seAvg']);
-  row['stat_ub'] = row['simpleAvg'] + (1.645 * row['seAvg']);
+  row['stat_lb'] = Math.round(row['simpleAvg'] - (1.645 * row['seAvg']));
+  row['stat_ub'] = Math.round(row['simpleAvg'] + (1.645 * row['seAvg']));
 
   row['meas_aggregate_cv'] = row['seAvg'] / row['simpleAvg'];
   row['reliability'] = calcReliability(row['meas_aggregate_cv']);
@@ -283,7 +283,13 @@ function displaySimpleWeight(tableName, row, label, source, pctLabel){
 
   addHover(NewRow,label,source, true);
   addReliability(NewRow, row['reliability']);
-  addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
+  if (row['stat_ub'] === row['stat_lb']){
+    addHover(NewRow,row['simpleAvg'].toLocaleString('en'),pctLabel, false);
+  }
+  if (row['stat_ub'] !== row['stat_lb']){
+    addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
+
+  }
   addMeas(NewRow,"-");
 }
 
@@ -315,18 +321,27 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
 
   if (standardErrorFlag){
     addReliability(NewRow, row['reliability']);
-    addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
-    if (row['rate_lb'] >= 0){
-      addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+    if (row['stat_lb'] !== row['stat_ub']){
+      addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
+      if (row['rate_lb'] >= 0){
+        addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+      }
+      if (row['rate_lb'] < 0 ){
+        addHover(NewRow,'0 %'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
+      }
     }
-    if (row['rate_lb'] < 0 ){
-      addHover(NewRow,'0 %'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
-    }
+    // No range if lower bound and upper bound the same
+  if (row['stat_ub'] === row['stat_lb']){
+    addMeas(NewRow, row[stat].toLocaleString('en'))
+    addHover(NewRow,row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"}),pctLabel, false)
   }
+}
+  // For Measures that do not have standard errors
   if (!standardErrorFlag){
     addReliability(NewRow, 'grey');
     addMeas(NewRow, row[stat].toLocaleString('en'))
-    addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)}
+    addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+  }
 
 };
 
