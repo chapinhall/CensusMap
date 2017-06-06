@@ -13,8 +13,15 @@
 .logo{
   padding: 0;
   margin:0;
-  width:32%
+  width:37%
 }
+
+.logo_small{
+  padding: 0;
+  margin:0;
+  width:24%
+}
+
 body {
   font-size: 16px;
   background-color: #FFFFFF;
