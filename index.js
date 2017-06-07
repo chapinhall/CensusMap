@@ -258,40 +258,18 @@ function addTable(table){
   for (var i = 0; i < table.vars.length; i++){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
-      if (!table.vars[i].rateOnly){
-        var row = estimatesCalculations(table.vars[i].name,tracts, true);
-        addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, true);
-      }
-      if (table.vars[i].rateOnly){
-        var row = simpleWeightCalculation(table.vars[i].name,tracts);
-        displaySimpleWeight(table.name, row,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, true);
-      }
+      var row = estimatesCalculations(table.vars[i].name,tracts, true);
+      console.log(row);
+      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, table.vars[i].standardErrorFlag);
     }
 
     if (table.vars[i].unit === 'communityArea'){
       var row = estimatesCalculations(table.vars[i].name,commAreas,false);
-      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, false);
+      addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, table.vars[i].standardErrorFlag);
     }
 
   }
 };
-
-function displaySimpleWeight(tableName, row, label, source, pctLabel){
-  var table = document.getElementById(tableName);
-  var NewRow = document.createElement("tr");
-  table.appendChild(NewRow);
-
-  addHover(NewRow,label,source, true);
-  addReliability(NewRow, row['reliability']);
-  if (row['stat_ub'] === row['stat_lb']){
-    addHover(NewRow,row['simpleAvg'].toLocaleString('en'),pctLabel, false);
-  }
-  if (row['stat_ub'] !== row['stat_lb']){
-    addHover(NewRow,row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')),pctLabel, false);
-
-  }
-  addMeas(NewRow,"-");
-}
 
 function addHeader(table, val){
   var tableHead = document.getElementById(table.name)
@@ -317,56 +295,107 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
   var table = document.getElementById(tableName);
   var NewRow = document.createElement("tr");
   table.appendChild(NewRow);
-  addHover(NewRow,label,source, true);
+  addLabel(NewRow,label,source, true);
 
-  if (standardErrorFlag){
+  //Special Formatting for Violent Crimes Measure
+  if (stat === "nViolCrimesPer1k"){
     addReliability(NewRow, row['reliability']);
-    if (row['stat_lb'] !== row['stat_ub']){
-      addMeas(NewRow, row['stat_lb'].toLocaleString('en').concat(" to ").concat(row['stat_ub'].toLocaleString('en')))
-      if (row['rate_lb'] >= 0){
-        addHover(NewRow,row['rate_lb'].toLocaleString('en', {style: "percent"}).concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
-      }
-      if (row['rate_lb'] < 0 ){
-        addHover(NewRow,'0 %'.concat(" to ").concat(row['rate_ub'].toLocaleString('en', {style: "percent"})),pctLabel, false)
-      }
-    }
-    // No range if lower bound and upper bound the same
-  if (row['stat_ub'] === row['stat_lb']){
-    addMeas(NewRow, row[stat].toLocaleString('en'))
-    addHover(NewRow,row['meas_aggregate_mean'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel)
+    blankMeas(NewRow);
+
   }
-}
-  // For Measures that do not have standard errors
-  if (!standardErrorFlag){
-    addReliability(NewRow, 'grey');
-    addMeas(NewRow, row[stat].toLocaleString('en'))
-    addHover(NewRow,row['perc'].toLocaleString('en', {style: "percent"}),pctLabel, false)
+
+  if (stat !== "nViolCrimesPer1k"){
+
+    if (standardErrorFlag){
+      addReliability(NewRow, row['reliability']);
+    }
+
+    // For Measures that do not have standard errors
+    if (!standardErrorFlag){
+      addReliability(NewRow, 'grey');
+    }
+
+    addMeas(NewRow,row['stat_lb'],row['stat_ub'],row[stat], standardErrorFlag)
+    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel, standardErrorFlag)
   }
 
 };
 
-function addMeas(row,val)
+function addMeas(row,lb,ub,stat,standardErrorFlag)
 {
+  // Do not let values fall below 0
+  if (standardErrorFlag){
+    if (lb < 0){
+      lb = 0;
+    }
+
+    if (lb === ub){
+      var TextVal = document.createTextNode(stat.toLocaleString('en'));
+    }
+
+    if (lb !== ub){
+      var TextVal = document.createTextNode(lb.toLocaleString('en').concat(" to ".concat(ub.toLocaleString('en'))));
+    }
+  }
+  if (!standardErrorFlag){
+    var TextVal = document.createTextNode(stat.toLocaleString('en'));
+  }
+
   var NewCol = document.createElement("td");
-  var TextVal = document.createTextNode(val);
   row.appendChild(NewCol);
   NewCol.appendChild(TextVal);
 };
 
-function addHover(row,val,hover, labelBool)
+function blankMeas(row)
+{
+  var NewCol = document.createElement("td");
+  var TextVal = document.createTextNode("-");
+  row.appendChild(NewCol);
+  NewCol.appendChild(TextVal);
+};
+
+function addLabel(row,label,hover)
 {
 
   var NewCol = document.createElement("td");
   var toolTip = document.createElement("tooltiptext")
   toolTip.setAttribute("title", hover);
-  var TextVal = document.createTextNode(val);
+  var TextVal = document.createTextNode(label);
   $(TextVal).appendTo(toolTip);
   row.appendChild(NewCol);
   NewCol.appendChild(toolTip);
-  // Apply label id to set wider margin
-  if (labelBool){
-    NewCol.setAttribute("id", "label")
+  NewCol.setAttribute("id", "label")
+
+};
+
+function addHover(row,lb, ub, percent, hover, standardErrorFlag)
+{
+  // limit percent range
+  if (standardErrorFlag){
+    if (lb < 0){
+      lb = 0;
+    }
+    if (ub > 100){
+      ub = 100;
+    }
+    if (ub !== lb){
+      var TextVal = document.createTextNode(lb.toLocaleString('en', {style: "percent"}).concat(" to ").concat(ub.toLocaleString('en', {style: "percent"})));
+    }
+    if (ub === lb){
+      var TextVal = document.createTextNode(percent.toLocaleString('en', {style: "percent"}))
+    }
   }
+  if (!standardErrorFlag){
+    var TextVal = document.createTextNode(percent.toLocaleString('en', {style: "percent"}))
+  }
+
+  var NewCol = document.createElement("td");
+  var toolTip = document.createElement("tooltiptext")
+  toolTip.setAttribute("title", hover);
+  $(TextVal).appendTo(toolTip);
+  row.appendChild(NewCol);
+  NewCol.appendChild(toolTip);
 };
 
 function addReliability(row,reliability)
