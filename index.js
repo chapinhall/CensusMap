@@ -259,7 +259,6 @@ function addTable(table){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
       var row = estimatesCalculations(table.vars[i].name,tracts, true);
-      console.log(row);
       addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, table.vars[i].standardErrorFlag);
     }
 
@@ -300,7 +299,7 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
   //Special Formatting for Violent Crimes Measure
   if (stat === "nViolCrimesPer1k"){
     addReliability(NewRow, row['reliability']);
-    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel)
+    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel,standardErrorFlag, true)
     blankMeas(NewRow);
 
   }
@@ -317,7 +316,7 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
     }
 
     addMeas(NewRow,row['stat_lb'],row['stat_ub'],row[stat], standardErrorFlag)
-    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel, standardErrorFlag)
+    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel, standardErrorFlag, false)
   }
 
 };
@@ -369,9 +368,10 @@ function addLabel(row,label,hover)
 
 };
 
-function addHover(row,lb, ub, percent, hover, standardErrorFlag)
+function addHover(row,lb, ub, percent, hover, standardErrorFlag, specialFormatFlag)
 {
   // limit percent range
+  console.log(specialFormatFlag)
   if (standardErrorFlag){
     if (lb < 0){
       lb = 0;
@@ -379,15 +379,18 @@ function addHover(row,lb, ub, percent, hover, standardErrorFlag)
     if (ub > 100){
       ub = 100;
     }
-    if (ub !== lb){
+    if (ub !== lb && !specialFormatFlag){
       var TextVal = document.createTextNode(lb.toLocaleString('en', {style: "percent"}).concat(" to ").concat(ub.toLocaleString('en', {style: "percent"})));
     }
-    if (ub === lb){
+    if (ub === lb && !specialFormatFlag){
       var TextVal = document.createTextNode(percent.toLocaleString('en', {style: "percent"}))
     }
   }
-  if (!standardErrorFlag){
+  if (!standardErrorFlag && !specialFormatFlag){
     var TextVal = document.createTextNode(percent.toLocaleString('en', {style: "percent"}))
+  }
+  if (specialFormatFlag){
+    var TextVal = document.createTextNode(lb.toLocaleString('en').concat(" to ").concat(ub.toLocaleString('en')));
   }
 
   var NewCol = document.createElement("td");
