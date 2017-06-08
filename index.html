@@ -145,8 +145,9 @@
             <h3>
               Directions
             </h3>
+            <iframe width="640" height="360" src="https://www.youtube.com/embed/iVGEerpIVeQ" frameborder="0" allowfullscreen></iframe>
             <p>
-              You can center in your area of the city by either using the plus and minus buttons (at the top left of the map) to zoom along with clicking and dragging, or by clicking the blue <strong>“Jump To”</strong> button at the top right to zoom directly to a given Community Area.
+              You can center in your area of the city by either using the plus and minus buttons (at the top left of the map) to zoom along with clicking and dragging, or by clicking the blue <strong>"Jump To"</strong> button at the top right to zoom directly to a given Community Area.
             </p>
             <p>
               When you are in the right part of the city, you can draw your geography using the icon on the bottom right corner of the map. <img src = "polygon.png" height = "25px", width="25px">  After clicking that icon, click on the map to start drawing the borders of the area you want information on. Remember, this shape can follow the streets and block in any way that makes sense to you, and does not have to follow along with any existing lines!</p>
@@ -157,7 +158,6 @@
               <p>
                 Once you have created your geography of interest, click the <strong>"Run"</strong> button to compute your aggregated estimates.
               </p>
-              <iframe width="640" height="360" src="https://www.youtube.com/embed/iVGEerpIVeQ" frameborder="0" allowfullscreen></iframe>
               <h3>
                 View Results
               </h3>
@@ -167,25 +167,25 @@
                 </div>
                 <div id="methodology" class="tab-pane fade">
                   <h2>Methodology</h2>
+                  <h3>Data Sources and Geographies</h3>
                   <p>
                     Data is drawn from a combination of sources, including the City of Chicago Data Portal, and Chapin Hall’s estimates of where program-eligible children and families live in Chicago, and the American Community Survey (ACS) 2011-2015 data release (which, despite relying on five years of sampling, reflects a single representative year in that span). See the <a href="http://dfss-ycic.chapinhall.org/">Young Children in Chicago</a> webpage maintained by Chapin Hall to read more about the Chapin Hall estimates of neighborhood profiles and service usage, and about the <a href = "http://dfss-ycic.chapinhall.org/include/Part%20A%20Appendix%20-%20Population%20and%20Poverty%20Estimation%20Methods%20Dec%202016.pdf">methodology for producing estimates of program-eligible youth</a>.
                   </p>
                   <p>Depending on the source, indicators may be available at the Chicago Community Area level (for all Chapin Hall estimates), or the Census Tract level (for all other measures). In the Results section, you can hover your mouse over any indicator to find out more details about it.
                   </p>
+                  <h3> Estimated Calculations</h3>
                   <p>
                     After selecting an area and clicking “Run” an estimated value for each indicator is calculated by aggregating the values across the smaller geographies that are within your selection. If smaller geographies are only partially included in your selection, their values get included in proportion to how much of their area is included.
                   </p>
                   <p>
                     For example, the indicator for percent of children under 6 who have a grandparent caring for them is available at the Census Tract level. If your geography contains 4 entire Census Tracts, the number of children under 6 in the care of a grandparent would get summed across those tracts and would be reported in the table. The total number of children under 6 would also be summed in order to calculate an overall percentage of children under 6 in the care of a grandparent for the overall area. If the area also included portions of three additional Census Tracts—say, 20%, 35%, and 60% of the three respective Tract areas—then the number of children in each would be respectively multiplied by 20%, 35% and 60% and then added into the overall total.
                   </p>
+                  <h3> Relaliability Calculations </h3>
                   <p>
                     The ranges of values for both estimated numbers and percentages are constructed as a 90% confidence interval. That is, based on margin of error information available for survey data, the true value of a given indicator is expected to fall in this range with 90% probability (and fall either above or below this range only 10% of the time). Note that the "Violent Crimes per 1,000" indicator is, in part, based on survey data on the total population in a given area and may be reported as a range of uncertainty for smaller areas.
                   </p>
                   <p>
                     The "stoplight" colors which indicate reliability of each indicator are based on calculations of the <a href="https://en.wikipedia.org/wiki/Coefficient_of_variation">coefficient of variation</a>, where values of 0.12 or below are indicated as green, values between 0.12 and 0.40 are yellow, and above 0.40 are red. Since these thresholds are largely arbitrary, we chose to confirm with existing practices around selecting these cutoffs, specifically using those selected by ESRI in their <a href="https://www.esri.com/software/american-community-survey/understanding-margin-error">reliability ratings of ACS data</a>. Because Chapin Hall estimates of margins of error for eligible youth populations are not yet available, these are for now indicated with gray, indicating that they are not available.
-                  </p>
-                  <p>
-                    These calculations are displayed in the Results section.
                   </p>
                 </div>
                 <div id="about" class="tab-pane fade">
