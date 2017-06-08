@@ -174,7 +174,7 @@ function estimatesCalculations(stat, geographies, standardErrorFlag)
       // Only add value if the meas_aggregate_wgt is above zero
       if (row['meas_aggregate_wgt'] > 0 && standardErrorFlag){
         row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se],2));
-        row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se_num],2));
+        row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow(geography.properties[meas_se_num],2);
 
       }
     }
