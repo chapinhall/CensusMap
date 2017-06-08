@@ -1,6 +1,7 @@
 /* custom styles */
 
 
+
 .main-header {
   text-align: left;
   padding:0;
@@ -71,6 +72,23 @@ th, td {
   table {
     table-layout: : fixed;
   }
+
+  table#legend{
+    border-collapse: collapse;
+  }
+
+.reliability{
+  text-align: left;
+  background-color: transparent;
+  border:0;
+  width: 90%;
+
+}
+.stoplight{
+  background-color: transparent;
+  width:10px;
+  border:0;
+}
 
 .btn-success{
   width:30%;
