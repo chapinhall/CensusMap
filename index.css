@@ -121,12 +121,10 @@ th, td {
 
 
 
-#menu { position: absolute; top: 5px; right: 20px; width: 275px; height:60px; background: transparent; z-index:500;}*/
-#menu {
-}
+#menu { position: fixed; top: 12px; left: 60px; width: 275px; height:60px; background: transparent; z-index:500;}
 
-  .scrollable-menu {
-      height: auto;
-      max-height: 180px;
-      overflow-x: hidden;
-  }
+.scrollable-menu {
+  height: auto;
+  max-height: 180px;
+  overflow-x: hidden;
+}
