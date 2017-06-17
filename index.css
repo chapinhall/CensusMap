@@ -1,7 +1,5 @@
 /* custom styles */
 
-
-
 .main-header {
   text-align: left;
   padding:0;
@@ -35,7 +33,6 @@ a {
   color: #cc6600;;
 }
 
-
 h1,h2,h3 {
   font-family: 'Helvetica', serif;
   color: #809DB9;
@@ -64,7 +61,7 @@ th, td {
   text-align:center;
   }
 
-  td#label{
+  td#label {
     width: 300px;
     overflow: hidden;
   }
@@ -73,18 +70,18 @@ th, td {
     table-layout: : fixed;
   }
 
-  table#legend{
+  table#legend {
     border-collapse: collapse;
   }
 
-.reliability{
+.reliability {
   text-align: left;
   background-color: transparent;
   border:0;
   width: 90%;
 
 }
-.stoplight{
+.stoplight {
   background-color: transparent;
   width:10px;
   border:0;
@@ -98,35 +95,37 @@ th, td {
   width:30%;
 }
 
-
 #wrap {
   height: 100%;
   padding-left: 10px;
   padding-right: 10px;
 }
 #map {
-    position: fixed;
-    width: 50%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 10;
+  position: fixed;
+  width: 50%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 10;
 }
-
 
 #map-nav {
   display: inline-block;
   margin-left: 15px;
 }
 
-
-
-#menu { position: absolute; top: 5px; right: 20px; width: 275px; height:60px; background: transparent; z-index:500;}*/
-#menu {
+#menu { 
+  position: fixed; 
+  top: 10px; 
+  right:50%; 
+  width: 275px; 
+  height:60px; 
+  background: transparent; 
+  z-index:500;
 }
 
-  .scrollable-menu {
-      height: auto;
-      max-height: 180px;
-      overflow-x: hidden;
-  }
+.scrollable-menu {
+  height: auto;
+  max-height: 180px;
+  overflow-x: hidden;
+}
