@@ -215,37 +215,7 @@ function calcReliability(cv){
 
 }
 
-function simpleWeightCalculation(stat, geographies){
-  // Iniitialize values
-  var row = {};
-  row['name'] = stat;
-  row[stat] = 0;
-  row['se_total'] = 0;
-  var meas_se_num = stat + "_se";
-  row['intersectCount'] = 0;
 
-
-  // Caclulate total weighted estimate
-  for (var i = 0; i < geographies.features.length; i++){
-    var geography = geographies.features[i];
-    if (geography.properties.intersection && geography.properties.hasOwnProperty(stat)){
-      row[stat] = (Number(geography.properties[stat]) * geography.properties.overlap) + row[stat];
-      row['se_total'] = (Number(geography.properties[meas_se_num]) * geography.properties.overlap) + row['se_total'];
-      row['intersectCount'] = row['intersectCount'] + 1;
-    }
-  }
-
-  row['simpleAvg'] = Math.round((row[stat] / row['intersectCount']));
-  row['seAvg'] = row['se_total'] / row['intersectCount'];
-
-  // 90% Confidence Intervals
-  row['stat_lb'] = Math.round(row['simpleAvg'] - (1.645 * row['seAvg']));
-  row['stat_ub'] = Math.round(row['simpleAvg'] + (1.645 * row['seAvg']));
-
-  row['meas_aggregate_cv'] = row['seAvg'] / row['simpleAvg'];
-  row['reliability'] = calcReliability(row['meas_aggregate_cv']);
-  return row;
-}
 
 function addTable(table){
   // Add Header
@@ -371,7 +341,6 @@ function addLabel(row,label,hover)
 function addHover(row,lb, ub, percent, hover, standardErrorFlag, specialFormatFlag)
 {
   // limit percent range
-  console.log(specialFormatFlag)
   if (standardErrorFlag){
     if (lb < 0){
       lb = 0;
