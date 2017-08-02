@@ -425,3 +425,17 @@ function resetTables()
     }
   }
 };
+
+// Draw Control popup tooltip
+$(window).load(function() {
+  setTimeout(function() {
+    $('#draw-control-helper').addClass('active');
+    },500);
+  $('#map,.leaflet-draw-draw-polygon,#draw-control-helper').click(function() {
+    closeControlHelper();
+  });
+});
+
+function closeControlHelper() {
+  $('#draw-control-helper').removeClass('active');
+}
