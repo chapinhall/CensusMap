@@ -136,6 +136,95 @@ function intersect(userShape, geographies){
 function estimatesCalculations(stat, geographies, standardErrorFlag)
 {
   var row = {};
+  var subcalcs = {};
+  var num = stat;
+  var rat = stat.replace("n", "r");
+  var wgt = stat.replace("n", "w");
+  var num_se = num + "_se";
+  var rat_se = rat + "_se";
+  var wgt_se = wgt + "_se";
+
+  // Iniitialize values
+  row['name'] = stat;
+  row['num_agg'] = 0;
+  row['wgt_agg'] = 0;
+  row['rat_agg'] = 0;
+  row['intersectCount'] = 0;
+  row['num_agg_var'] = 0;
+  row['rat_agg_var'] = 0;
+  row['wgt_agg_var'] = 0;
+
+  //old code for comparison
+  row['rat_agg_var_old'] = 0;
+  row['num_agg_var_old'] =0;
+
+  // Calculate counts, weight, and variances for selection
+  for (var i = 0; i < geographies.features.length; i++){
+    var geography = geographies.features[i];
+    if (geography.properties.intersection && geography.properties.hasOwnProperty(num)){
+      row['num_agg'] = row['num_agg'] + (geography.properties.overlap * Number(geography.properties[num]));
+      row['wgt_agg'] = row['wgt_agg'] + (geography.properties.overlap * Number(geography.properties[wgt]));
+    }
+  };
+
+     for (var i = 0; i < geographies.features.length; i++){
+         var geography = geographies.features[i];
+         if (geography.properties.intersection && geography.properties.hasOwnProperty(num)){
+              if (row['wgt_agg'] > 0 && standardErrorFlag){
+                  row['num_agg_var'] = row['num_agg_var'] + Math.pow(geography.properties.overlap, 2) * Math.pow(geography.properties[num_se],2);
+                  row['wgt_agg_var'] = row['wgt_agg_var'] + Math.pow(geography.properties.overlap, 2) * Math.pow(geography.properties[wgt_se],2);
+
+                  //old code for comparison
+                  row['rat_agg_var_old'] = row['rat_agg_var_old'] + Math.pow((geography.properties.overlap * geography.properties[wgt]) / row['wgt_agg'],2) * (Math.pow(geography.properties[rat_se],2));
+                  row['num_agg_var_old'] = row['num_agg_var_old'] + Math.pow(geography.properties[num_se],2);
+                  subcalcs[geography.properties.geoid] = Math.pow((geography.properties.overlap * geography.properties[wgt]) / row['wgt_agg'],2) * (Math.pow(geography.properties[rat_se],2));
+              }
+              row['intersectCount'] = row['intersectCount'] + 1;
+            }
+          };
+  if (stat === 'nChLt6_2Par_Lf'){
+    // console.log("new",subcalcs);
+  }
+
+
+
+  // Calculate ratio and related variance
+  row['rat_agg'] = row['num_agg'] / row['wgt_agg']
+  if (standardErrorFlag){
+    row['rat_agg_var'] = deltaMethod(row['num_agg'], row['wgt_agg'], row['num_agg_var'], row['wgt_agg_var'], row['num_agg_var'])
+  }
+
+  // Create standard errors and confidence intervals from the above
+  if (standardErrorFlag){
+    row['num_agg_se'] = Math.sqrt(row['num_agg_var']);
+    row['rat_agg_se'] = Math.sqrt(row['rat_agg_var']);
+
+    // print code comparison
+    row['num_agg_se_old'] = Math.sqrt(row['num_agg_var_old']);
+    row['rat_agg_se_old'] = Math.sqrt(row['rat_agg_var_old']);
+
+    // 90% Confidence Intervals
+    row['num_lb'] = Math.round(row['num_agg'] - (1.645 * row['num_agg_se']));
+    row['num_ub'] = Math.round(row['num_agg'] + (1.645 * row['num_agg_se']));
+
+    row['rat_lb'] = (row['rat_agg'] - (1.645 * row['rat_agg_se']))
+    row['rat_ub'] = (row['rat_agg'] + (1.645 * row['rat_agg_se']))
+
+    row['rat_agg_cv'] = row['rat_agg_se'] / row['rat_agg'];
+    row['reliability'] = calcReliability(row['rat_agg_cv']);
+  }
+
+  row['num_agg'] = Math.round(row['num_agg']);
+
+  row['perc'] = row['rat_agg'].toLocaleString('en', {style: "percent"})
+  return row;
+
+};
+
+function oldestimatesCalculations(stat, geographies, standardErrorFlag)
+{
+  var row = {};
+  var subcalcs = {};
   var meas = stat.replace("n", "r");
   var meas_wgt = stat.replace("n", "w");
   var meas_se = meas + "_se";
@@ -175,10 +264,17 @@ function estimatesCalculations(stat, geographies, standardErrorFlag)
       if (row['meas_aggregate_wgt'] > 0 && standardErrorFlag){
         row['meas_aggregate_var'] = row['meas_aggregate_var'] + Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se],2));
         row['meas_aggregate_var_num'] = row['meas_aggregate_var_num'] + Math.pow(geography.properties[meas_se_num],2);
+        subcalcs[geography.properties.geoid] = Math.pow((geography.properties.overlap * geography.properties[meas_wgt]) / row['meas_aggregate_wgt'],2) * (Math.pow(geography.properties[meas_se],2));
+
+
 
       }
     }
   };
+
+  if (stat === 'nChLt6_2Par_Lf'){
+    // console.log(subcalcs);
+  }
   if (standardErrorFlag){
     row['meas_aggregate_se'] = Math.sqrt(row['meas_aggregate_var']);
     row['meas_aggregate_se_num'] = Math.sqrt(row['meas_aggregate_var_num']);
@@ -215,6 +311,29 @@ function calcReliability(cv){
 
 }
 
+function deltaMethod(mu1, mu2, var1, var2, covar12){
+  var d1  = 1 / mu2;
+  var d2  = -mu1 / (Math.pow(mu2,2));
+  var vr = Math.pow(d1,2)*var1 + Math.pow(d2,2)*var2 + 2*d1*d2*covar12;
+  if (vr < 0) {
+      vr = 0;
+  }
+  return vr
+}
+function calcReliability(cv){
+  if (cv > 0.4){
+    var reliability = 'red';
+  }
+  if (cv <= 0.4 && cv > 0.12) {
+    var reliability = 'yellow';
+  }
+  if (cv <= 0.12) {
+    var reliability = 'green';
+  }
+  return reliability;
+
+}
+
 
 
 function addTable(table){
@@ -229,6 +348,11 @@ function addTable(table){
     // process tract level variables
     if (table.vars[i].unit === 'tract'){
       var row = estimatesCalculations(table.vars[i].name,tracts, true);
+      var oldRow = oldestimatesCalculations(table.vars[i].name,tracts, true);
+      if (table.vars[i].name === 'nChLt6_2Par_Lf'){
+        console.log(row);
+        console.log(oldRow);
+      }
       addRow(table.name, row, table.vars[i].name,table.vars[i].label, table.vars[i].source, table.vars[i].pctLabel, table.vars[i].standardErrorFlag);
     }
 
@@ -269,7 +393,7 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
   //Special Formatting for Violent Crimes Measure
   if (stat === "nViolCrimesPer1k"){
     addReliability(NewRow, row['reliability']);
-    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel,standardErrorFlag, true)
+    addHover(NewRow,row['rat_lb'], row['rat_ub'], row['rat_agg'],pctLabel,standardErrorFlag, true)
     blankMeas(NewRow);
 
   }
@@ -285,8 +409,8 @@ function addRow(tableName, row, stat, label, source, pctLabel, standardErrorFlag
       addReliability(NewRow, 'grey');
     }
 
-    addMeas(NewRow,row['stat_lb'],row['stat_ub'],row[stat], standardErrorFlag)
-    addHover(NewRow,row['rate_lb'], row['rate_ub'], row['meas_aggregate_mean'],pctLabel, standardErrorFlag, false)
+    addMeas(NewRow,row['num_lb'],row['num_ub'],row['num_agg'], standardErrorFlag)
+    addHover(NewRow,row['rat_lb'], row['rat_ub'], row['rat_agg'],pctLabel, standardErrorFlag, false)
   }
 
 };
