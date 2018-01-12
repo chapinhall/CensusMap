@@ -1,0 +1,12 @@
+data/
+key/s
+*.KML
+*.zip
+*.qgis
+.Rhistory
+*.png
+*.pdf
+*.db
+*.jpeg
+*.xlsx
+*.csv
