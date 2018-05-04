@@ -5,8 +5,9 @@ import argparse
 
 def read_csv(csv_filename,id_csv_col):
     df = pd.read_csv(csv_filename)
+    #special formatting for tract
     df = df[pd.notnull(df[id_csv_col])]
-    df[id_csv_col] = df[id_csv_col].astype(int)
+    #df[id_csv_col] = df[id_csv_col].astype(int)
     print('CSV file has {} rows to merge'.format(len(df[id_csv_col])))
 
     # move id column to first position
@@ -25,20 +26,22 @@ def read_json(geojson_filename):
 def merge(args):
     df = read_csv(args.csv_filename, args.id_csv_col)
     geojson = read_json(args.geojson_filename)
-    unmatched_csv_records = list(df[args.id_csv_col])
+    # Iniitialize unmatched records
+    unmatched_json_records = []
+    for feature in geojson['features']:
+        unmatched_json_records.append(feature['properties'][args.id_geojson_col])
     matched = 0
-
     for row in df.itertuples(index=False):
         for feature in geojson['features']:
             #the first position of the df is the id column
             if str(row[0]) == str(feature['properties'][args.id_geojson_col]):
                 matched += 1
-                unmatched_csv_records.remove(row[0])
+                unmatched_json_records.remove(str(row[0]))
                 colnames = list(df.columns)
                 for i in range(len(row)):
                     feature['properties'][colnames[i]] = str(row[i])
     print('Matched {} records'.format(matched))
-    write_unmatched(unmatched_csv_records,args)
+    write_unmatched(unmatched_json_records,args)
 
     # save merged datasets to an output geojson file
     json_string = json.dumps(geojson)
@@ -47,11 +50,11 @@ def merge(args):
         f.write(json_string)
     f.close()
 
-def write_unmatched(unmatched_csv_records, args):
+def write_unmatched(unmatched_json_records, args):
     csv_out = args.csv_filename.split("/")[-1].split(".")[0] + "_unmatched.csv"
     with open(csv_out,'w', newline='') as f:
         writer =csv.writer(f)
-        writer.writerows([unmatched_csv_records])
+        writer.writerows([unmatched_json_records])
     print("Unmatched csv records written to {}".format(csv_out))
 
 if __name__=='__main__':
