@@ -1,9 +1,18 @@
 var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
 
-L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
 	maxZoom: 18,
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+}).addTo(map);
+
+var printer = L.easyPrint({
+	tileLayer: tiles,
+	sizeModes: ['Current'],
+	filename: 'SelectedArea',
+	exportOnly: true,
+	hideControlContainer: true,
+	hidden: true
 }).addTo(map);
 
 // set styling of Areas
@@ -42,6 +51,11 @@ var drawControl = new L.Control.Draw({
 	},
 });
 map.addControl(drawControl);
+
+// Print Event Handler
+document.getElementById("print").onclick = function() {
+	printer.printMap('CurrentSize', 'SelectedArea')
+}
 
 // Draw Event Handler.
 map.on("draw:created", function(e) {
