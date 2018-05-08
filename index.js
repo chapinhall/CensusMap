@@ -11,7 +11,7 @@ var printer = L.easyPrint({
 	sizeModes: ['Current'],
 	filename: 'SelectedArea',
 	exportOnly: true,
-	hideControlContainer: true,
+	hideControlContainer: false,
 	hidden: true
 }).addTo(map);
 
