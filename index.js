@@ -54,7 +54,12 @@ map.addControl(drawControl);
 
 // Print Event Handler
 document.getElementById("print").onclick = function() {
-	printer.printMap('CurrentSize', 'SelectedArea')
+	try {
+		printer.printMap('CurrentSize', 'SelectedArea')
+	}
+	catch (err) {
+		alert("To print the map, try using the Firefox or Chrome Web Browser.")
+	}
 }
 
 // Draw Event Handler.
