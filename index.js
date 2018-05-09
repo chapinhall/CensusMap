@@ -10,7 +10,7 @@ var printPlugin = L.easyPrint({
     title: 'Print',
 	position: 'topleft',
 	hideControlContainer: false,
-	sizeModes: ['A4Landscape'],
+	sizeModes: ['Current'],
 	hidden: false,
 	exportOnly:false
 }).addTo(map);
