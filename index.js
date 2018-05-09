@@ -8,7 +8,7 @@ var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/ligh
 
 var printer = L.easyPrint({
 	tileLayer: tiles,
-	sizeModes: ['Current'],
+	sizeModes: ['A4Portrait'],
 	filename: 'SelectedArea',
 	exportOnly: true,
 	hideControlContainer: false,
@@ -55,7 +55,7 @@ map.addControl(drawControl);
 // Print Event Handler
 document.getElementById("print").onclick = function() {
 	try {
-		printer.printMap('CurrentSize', 'SelectedArea')
+		printer.printMap('A4Portrait', 'SelectedArea')
 	}
 	catch (err) {
 		alert("To print the map, try using the Firefox or Chrome Web Browser.")
