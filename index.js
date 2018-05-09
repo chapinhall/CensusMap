@@ -50,6 +50,8 @@ var drawControl = new L.Control.Draw({
 		},
 	},
 });
+map.addControl(drawControl);
+
 
 // Draw Event Handler.
 map.on("draw:created", function(e) {
