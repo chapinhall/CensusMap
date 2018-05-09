@@ -6,13 +6,13 @@ var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/ligh
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
 }).addTo(map);
 
-var printer = L.easyPrint({
-	tileLayer: tiles,
-	sizeModes: ['A4Portrait'],
-	filename: 'SelectedArea',
-	exportOnly: true,
+var printPlugin = L.easyPrint({
+    title: 'Print',
+	position: 'topleft',
 	hideControlContainer: false,
-	hidden: true
+	sizeModes: ['A4Landscape'],
+	hidden: false,
+	exportOnly:false
 }).addTo(map);
 
 // set styling of Areas
@@ -52,15 +52,6 @@ var drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
-// Print Event Handler
-document.getElementById("print").onclick = function() {
-	try {
-		printer.printMap('A4Portrait', 'SelectedArea')
-	}
-	catch (err) {
-		alert("To print the map, try using the Firefox or Chrome Web Browser.")
-	}
-}
 
 // Draw Event Handler.
 map.on("draw:created", function(e) {
