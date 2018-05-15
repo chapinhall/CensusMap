@@ -1,9 +1,12 @@
 var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
 
-var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY25hdCIsImEiOiJjamg3dXJwaTMwNGs4MzNtYmZ6cDd6cmhnIn0.pZL56ETd8RD_HQMTSmqKYA', {
 	maxZoom: 18,
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	id: 'mapbox.streets'
 }).addTo(map);
 
 var printPlugin = L.easyPrint({
@@ -19,18 +22,29 @@ var printPlugin = L.easyPrint({
 function style(feature) {
 	return {
 		weight: 2,
-		opacity: 1,
-		color: '#e8b19c',
-		dashArray: '3',
-		fillOpacity: 0.3,
-		fillColor: ('#e8b19c')
+		opacity: 0.5,
+		color: 'rgba(193,102,34)',
+		fillOpacity: 0.2,
+		fillColor: 'rgba(193,102,34)'
 	};
 }
-
 //Color Neighborhoods
-geojson = L.geoJson(commAreas, {
+commAreas_layer = L.geoJson(commAreas, {
 	style: style
 }).addTo(map);
+
+// Hide community areas depending  on zoom
+map.on('zoomstart zoom zoomend', function(ev){
+	toggleLayers();
+})
+
+function toggleLayers(){
+    if (map.getZoom() >= 14 ){
+		map.removeLayer(commAreas_layer);
+    } else {
+		commAreas_layer.addTo(map);
+    }
+}
 
 // Add draw interface for userArea
 var drawnItems = new L.LayerGroup();
