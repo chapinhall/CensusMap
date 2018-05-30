@@ -90,18 +90,10 @@ th, td {
   border:0;
 }
 
-.btn-success{
-  width:30%;
+.btn-group input{
+    width: 50%;
+    display: block;
 }
-
-.btn-danger{
-  width:30%;
-}
-
-.btn-default{
-  width:30%;
-}
-
 
 #wrap {
   height: 100%;

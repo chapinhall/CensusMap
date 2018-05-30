@@ -9,23 +9,42 @@ var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?ac
 	id: 'mapbox.streets'
 }).addTo(map);
 
+// Check for Internet Explorer. Print Button Does not Work in IE
+function isIE() {
+  ua = navigator.userAgent;
+  /* MSIE used to detect old browsers and Trident used to newer ones*/
+  var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+  return is_ie;
+}
+// Disable Print Button for Internet Explorer
+if (isIE()){
+	alert("Since you are using Internet Explorer, to print the map you will need to print it using your browser.\n\nYou can also switch to Chrome or Firefox to use the Print Map Button instead.")
+} else{
+	$('#print').removeAttr("disabled");
+}
+
 var printPlugin = L.easyPrint({
     title: 'Print',
 	position: 'topleft',
 	hideControlContainer: false,
 	sizeModes: ['Current'],
-	hidden: false,
+	hidden: true,
 	exportOnly:false
 }).addTo(map);
+
+// Print Button Event Handler.
+document.getElementById("print").onclick = function() {
+	printPlugin.printMap("CurrentSize","map")
+};
 
 // set styling of Areas
 function style(feature) {
 	return {
 		weight: 2,
 		opacity: 0.5,
-		color: 'rgba(193,102,34)',
+		color: "#c16622",
 		fillOpacity: 0.2,
-		fillColor: 'rgba(193,102,34)'
+		fillColor: "#c16622"
 	};
 }
 //Color Neighborhoods

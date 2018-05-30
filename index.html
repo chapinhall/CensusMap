@@ -28,13 +28,12 @@
     <div class="col-sm-6 no-padding">
       <div id="map" class="desktop-only"></div>
       <div id='menu' class="desktop-only">
+      <div class="btn-group">
         <input id = "calculate" class = "btn btn-success" type = "submit" value = "Run" disabled = "disabled"/>
-        <input id = "delete" class = "btn btn-danger" "type" = "submit" value = "Remove" disabled = "disabled"/>
-        <div class="btn-group">
-          <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Jump to
-          </button>
-          <ul class="dropdown-menu scrollable-menu" role="menu">
+        <input id = "delete" class = "btn btn-danger" type = "submit" value = "Remove" disabled = "disabled"/>
+        <input id = "print" class = "btn btn-default" type = "submit" value = "Print Map"/ disabled = "disabled">
+        <input class="btn btn-info" type="submit" value = "Jump To" data-toggle="dropdown"/>
+        <ul class="dropdown-menu scrollable-menu" role="menu">
             <li><button class="dropdown-item btn-info btn-sm" type="button">Albany Park</button></li>
             <li><button class="dropdown-item btn-info btn-sm" type="button">Archer Heights</button></li>
             <li><button class="dropdown-item btn-info btn-sm" type="button">Armour Square</button></li>
@@ -114,7 +113,7 @@
             <li><button class="dropdown-item btn-info btn-sm" type="button">Woodlawn</button></li>
 
           </ul>
-        </div>
+      </div>
       </div>
     </div>
 
