@@ -1,30 +1,30 @@
 // Statistics
 var nHhs_Rent = {name: 'nHhs_Rent', label: 'Households below the poverty line, that rent their housing unit',
-source: 'American Community Survey (ACS) 2011-2015, B17019',unit: 'tract', pctLabel: 'This is the number of households below the poverty line who rent their housing unit,\nas a percentage of all households below the poverty line', standardErrorFlag: true}
+source: 'American Community Survey (ACS) 2013-2017, B17019',unit: 'tract', pctLabel: 'This is the number of households below the poverty line who rent their housing unit,\nas a percentage of all households below the poverty line', standardErrorFlag: true}
 
 var nFamLtPov_Ge3OwnKids = {name: 'nFamLtPov_Ge3OwnKids', label: 'Families below the poverty line, who are living with three or more of their own children in the household',
-source: 'American Community Survey (ACS) 2011-2015, table B17023', unit: 'tract', pctLabel: 'This is the number of families below the poverty line with three or more of their own children,\nas a percentage of all families below the poverty line',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, table B17023', unit: 'tract', pctLabel: 'This is the number of families below the poverty line with three or more of their own children,\nas a percentage of all families below the poverty line',standardErrorFlag: true }
 
 var nHhSizeCars_Ge3PerHh_0Cars = {name: 'nHhSizeCars_Ge3PerHh_0Cars', label: 'Households with three or more members, with no vehicles at home.',
-source: 'American Community Survey (ACS) 2011-2015, table B08201',unit: 'tract', pctLabel: 'This is the number of households with three or more members and no vehicles at home,\nas a percentage of all households with three or more members',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, table B08201',unit: 'tract', pctLabel: 'This is the number of households with three or more members and no vehicles at home,\nas a percentage of all households with three or more members',standardErrorFlag: true }
 
 var nBirths_Teen = {name: 'nBirths_Teen', label: 'Births, to a teen mother',
-source: 'American Community Survey (ACS) 2011-2015, table B13002',unit: 'tract', pctLabel: 'This is the number of births to mothers aged 19 or less,\nas a percentage of all births',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, table B13002',unit: 'tract', pctLabel: 'This is the number of births to mothers aged 19 or less,\nas a percentage of all births',standardErrorFlag: true }
 
 var nKidsLt6_GpCare = {name: 'nKidsLt6_GpCare', label: 'Children aged 6 or less, who are in the care of a grandparent householder',
-source: 'American Community Survey (ACS) 2011-2015, table B10001', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less who are in the care of a grandparent households,\nas a percentage of all children aged 6 or less',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, table B10001', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less who are in the care of a grandparent households,\nas a percentage of all children aged 6 or less',standardErrorFlag: true }
 
 var nRenters_Ge30Pct = {name: 'nRenters_Ge30Pct', label: 'Households that rent, who pay more than 30% of their income in rent',
-source: 'American Community Survey (ACS) 2011-2015, B17019', unit: 'tract',pctLabel: 'This is the number of households that pay more than 30% of their income in rent,\nas a percentage of all households that rent',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, B17019', unit: 'tract',pctLabel: 'This is the number of households that pay more than 30% of their income in rent,\nas a percentage of all households that rent',standardErrorFlag: true }
 
 var nChLt6_1Par_Lf = {name: 'nChLt6_1Par_Lf', label: 'Single parent households with children under age 6, where the parent works',
-source: 'American Community Survey (ACS) 2011-2015, table B23008', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less in single-parent households where the parent works,\nas a percentage of all children aged 6 or less in single-parent households',standardErrorFlag: true}
+source: 'American Community Survey (ACS) 2013-2017, table B23008', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less in single-parent households where the parent works,\nas a percentage of all children aged 6 or less in single-parent households',standardErrorFlag: true}
 
 var nChLt6_2Par_Lf = {name: 'nChLt6_2Par_Lf', label: 'Two parent households with children under age 6, where both parents work',
-source: 'American Community Survey (ACS) 2011-2015, table B23008', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less in two-parent households where both parents work,\nas a percentage of all children aged 6 or less in two-parent households',standardErrorFlag: true}
+source: 'American Community Survey (ACS) 2013-2017, table B23008', unit: 'tract', pctLabel: 'This is the number of children aged 6 or less in two-parent households where both parents work,\nas a percentage of all children aged 6 or less in two-parent households',standardErrorFlag: true}
 
 var nAdultsGe25_LtHsEd = {name: 'nAdultsGe25_LtHsEd', label: 'Adults aged 25 or more, with less than a high school education',
-source: 'American Community Survey (ACS) 2011-2015, table B15002', unit: 'tract', pctLabel: 'This is the number of adults aged 25 or more who have not earned at least a high school diploma (or equivalent),\nas a percentage of all adults aged 25 or more',standardErrorFlag: true }
+source: 'American Community Survey (ACS) 2013-2017, table B15002', unit: 'tract', pctLabel: 'This is the number of adults aged 25 or more who have not earned at least a high school diploma (or equivalent),\nas a percentage of all adults aged 25 or more',standardErrorFlag: true }
 
 var nViolCrimesPer1k = {name: 'nViolCrimesPer1k', label: "Violent Crimes per 1,000 residents", pctLabel: 'This is the ratio between the number of crimes,\n and the number of residents (in thousands)', unit: 'tract',
 source: 'City of Chicago Data Portal reports on crime incidents classified as violent using the applicable FBI Uniform Crime Reporting codes, and population estimates from the ACS, Table B01003',standardErrorFlag: true }
