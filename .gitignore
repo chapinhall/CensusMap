@@ -4,7 +4,7 @@ key/
 *.zip
 *.qgis
 .Rhistory
-*.png
+!*.png
 *.pdf
 *.db
 *.jpeg
