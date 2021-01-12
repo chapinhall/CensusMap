@@ -1,13 +1,13 @@
 var map = L.map('map').setView([41.8781, -87.6298], 11);
 var userShapes = new Array();
 
-var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY25hdCIsImEiOiJjamg3dXJwaTMwNGs4MzNtYmZ6cDd6cmhnIn0.pZL56ETd8RD_HQMTSmqKYA', {
-	maxZoom: 18,
-	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+// See available CARTO basemaps here: https://carto.com/help/building-maps/basemap-list/
+var tiles = L.tileLayer(
+  'https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', 
+  {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+   maxZoom: 18,
 	id: 'mapbox.streets'
-}).addTo(map);
+  }).addTo(map);
 
 // Check for Internet Explorer. Print Button Does not Work in IE
 function isIE() {
