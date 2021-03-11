@@ -17,5 +17,7 @@ and copy them to the "data process" folder of this `CensusMap` repo.
 Next, geospatial and other reference documents need to be updated with this information. The two steps to accomplish this involve:
 
 1. Running the `census.py` script in the "data process" folder, which now automatically joins the appropriate new files to the .geojson objects
-4. Opening each .geojson object, pre-pending "var <name of file> = " (using a text editor like Notepad++ is fine) and save it as a .js file of the same name in the "layers" subfolder
+2. Opening each .geojson object, pre-pending "var tracts = " and "var commAreas = " corresponding to each filename, and save it as a .js file of the same name in the "layers" subfolder.
+
+Finally, update the `tables.js` file in the main folder to have meta data corresponding to updates of the underlying data.
 
